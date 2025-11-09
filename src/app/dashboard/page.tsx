@@ -18,10 +18,10 @@ import { useMemo, useState } from "react";
 import styles from "./page.module.css";
 
 const sidebarItems = [
-  { label: "Pano", icon: LayoutDashboard, active: true },
-  { label: "Siparişler", icon: ClipboardList },
-  { label: "Mutfak", icon: ChefHat },
-  { label: "QR Menü", icon: QrCode },
+  { label: "Pano", icon: LayoutDashboard, active: true, href: "/dashboard" },
+  { label: "Siparişler", icon: ClipboardList, href: "/dashboard/orders" },
+  { label: "Mutfak", icon: ChefHat, href: "/dashboard/kitchen" },
+  { label: "QR Menü", icon: QrCode, href: "/dashboard/qr-menu" },
   { label: "Raporlar", icon: BarChart },
   { label: "Ön Muhasebe", icon: FileText },
   { label: "Stok", icon: Boxes },
@@ -80,14 +80,14 @@ export default function DashboardPage() {
           <div className={styles.logo}>GBZQR</div>
           <nav className={styles.navList}>
             {sidebarItems.map((item) => (
-              <button
+              <a
                 key={item.label}
                 className={clsx(styles.navItem, item.active && styles.navItemActive)}
-                type="button"
+                href={item.href ?? "#"}
               >
                 <item.icon />
                 <span>{item.label}</span>
-              </button>
+              </a>
             ))}
           </nav>
         </aside>

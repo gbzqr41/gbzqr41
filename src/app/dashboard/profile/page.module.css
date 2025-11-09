@@ -1,0 +1,186 @@
+.profileWrapper {
+  display: grid;
+  gap: 1.75rem;
+  width: 100%;
+}
+
+.headerBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--dash-surface);
+  border-radius: 20px;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 20px 48px var(--dash-shadow);
+  padding: 1.5rem 1.75rem;
+}
+
+.headerInfo {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.headerInfo h1 {
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  letter-spacing: -0.02em;
+}
+
+.headerInfo p {
+  color: var(--dash-text-muted);
+}
+
+.headerActions {
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+.headerButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid var(--dash-border);
+  background: rgba(17, 17, 17, 0.05);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.headerButtonPrimary {
+  background: linear-gradient(135deg, #0f0f10, #343434);
+  color: #ffffff;
+  border: none;
+}
+
+.headerButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px var(--dash-shadow);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.profileCard {
+  background: var(--dash-surface);
+  border-radius: 20px;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 22px 50px var(--dash-shadow);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.5rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f0f10, #242424);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.profileMeta {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.profileMeta span {
+  color: var(--dash-text-muted);
+}
+
+.profileStats {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.detailPanel {
+  background: var(--dash-surface);
+  border-radius: 20px;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 22px 50px var(--dash-shadow);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.detailGrid {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.detailRow {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.detailLabel {
+  font-size: 0.9rem;
+  color: var(--dash-text-muted);
+  font-weight: 600;
+}
+
+.detailValue {
+  font-weight: 600;
+}
+
+.preferences {
+  display: grid;
+  gap: 1rem;
+}
+
+.preferenceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  background: rgba(17, 17, 17, 0.03);
+}
+
+.saveButton {
+  border-radius: 14px;
+  border: none;
+  padding: 0.75rem 1.3rem;
+  font-weight: 600;
+  background: var(--dash-text);
+  color: var(--dash-bg);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saveButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 48px var(--dash-shadow);
+}
+
+@media (max-width: 1024px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

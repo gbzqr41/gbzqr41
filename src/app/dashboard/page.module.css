@@ -299,6 +299,7 @@
     background: var(--dash-surface);
     box-shadow: 0 10px 24px rgba(15, 15, 16, 0.08);
   }
+
 }
 
 @media (max-width: 640px) {
