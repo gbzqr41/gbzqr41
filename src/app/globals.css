@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  --color-background: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-muted: #f0f0f2;
+  --color-border: #e4e4e7;
+  --color-text: #0f0f10;
+  --color-text-muted: rgba(15, 15, 16, 0.64);
+  --color-primary: #101010;
+  --color-primary-muted: rgba(16, 16, 16, 0.08);
+  --shadow-sm: 0 8px 28px rgba(15, 15, 16, 0.08);
+  --shadow-xs: 0 2px 12px rgba(15, 15, 16, 0.06);
+  --radius-lg: 32px;
+  --radius-md: 20px;
+  --radius-sm: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans), -apple-system, blinkmacsystemfont, "Segoe UI",
+    sans-serif;
+  background: var(--color-background);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font: inherit;
+}
+
+.container {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
