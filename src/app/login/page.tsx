@@ -32,7 +32,7 @@ export default function LoginPage() {
             />
           </div>
           <div className={styles.assist}>
-            <Link href="/reset-password">Şifremi Unuttum?</Link>
+            <Link href="/forgot-password">Şifremi Unuttum?</Link>
           </div>
           <div className={styles.actions}>
             <button className={styles.primary} type="button">

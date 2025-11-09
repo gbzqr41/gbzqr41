@@ -1,0 +1,131 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: clamp(2rem, 6vw, 4rem);
+}
+
+.card {
+  width: min(480px, 100%);
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(2.75rem, 6vw, 3.75rem);
+  display: grid;
+  gap: 2.25rem;
+}
+
+.header {
+  display: grid;
+  gap: 0.85rem;
+  text-align: center;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  justify-self: center;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.titleIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(15, 15, 16, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(15, 15, 16, 0.7);
+}
+
+.title {
+  font-size: 1.7rem;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.otpGroup {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.otpInput {
+  width: 58px;
+  height: 64px;
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 24px rgba(15, 15, 16, 0.08);
+}
+
+.otpInput:focus {
+  outline: none;
+  border-color: rgba(16, 16, 16, 0.68);
+  box-shadow: 0 16px 28px rgba(15, 15, 16, 0.14);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-text);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.helper {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.helper button {
+  border: none;
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .otpGroup {
+    gap: 0.6rem;
+  }
+
+  .otpInput {
+    width: 48px;
+    height: 56px;
+  }
+}
+

@@ -1,0 +1,116 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f9f9;
+  padding: clamp(2rem, 6vw, 4rem);
+}
+
+.card {
+  width: min(460px, 100%);
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(2.5rem, 6vw, 3.5rem);
+  display: grid;
+  gap: 2rem;
+}
+
+.header {
+  display: grid;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  justify-self: center;
+}
+
+.title {
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.form {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.label {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.input {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgba(16, 16, 16, 0.64);
+  box-shadow: 0 0 0 3px rgba(16, 16, 16, 0.12);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-text);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.success {
+  display: grid;
+  gap: 0.75rem;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background: rgba(16, 16, 16, 0.06);
+  color: var(--color-text);
+}
+
+.success p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.success a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 15, 16, 0.2);
+}
+

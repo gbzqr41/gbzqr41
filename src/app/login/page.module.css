@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: clamp(3rem, 8vw, 6rem);
   gap: 2.5rem;
   background: var(--color-surface);
@@ -24,12 +25,15 @@
 .form {
   display: grid;
   gap: 1.5rem;
+  width: min(500px, 100%);
+  justify-items: stretch;
 }
 
 .field {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
+  width: 100%;
 }
 
 .label {
@@ -41,7 +45,8 @@
 .input {
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  padding: 0.85rem 1rem;
+  height: 60px;
+  padding: 0 1.25rem;
   background: #ffffff;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -56,13 +61,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .primary {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0.9rem 1.4rem;
+  height: 60px;
+  padding: 0 1.4rem;
   border-radius: 999px;
   background: var(--color-text);
   color: #ffffff;
@@ -80,7 +87,8 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0.9rem 1.4rem;
+  height: 60px;
+  padding: 0 1.4rem;
   border-radius: 999px;
   border: 1px solid var(--color-border);
   background: var(--color-primary-muted);
@@ -98,6 +106,7 @@
   font-size: 0.9rem;
   color: var(--color-text-muted);
   text-align: center;
+  width: 100%;
 }
 
 .assist a {
