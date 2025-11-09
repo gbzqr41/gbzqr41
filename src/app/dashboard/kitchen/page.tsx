@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentType } from "react";
+import type { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -116,7 +116,7 @@ const kitchenTickets: KitchenTicket[] = [
 
 const statusOrder: KitchenStatus[] = ["Hazırlanıyor", "Pişiyor", "Servise Hazır"];
 
-const statusIcons: Record<KitchenStatus, ComponentType<{ size?: number }>> = {
+const statusIcons: Record<KitchenStatus, LucideIcon> = {
   Hazırlanıyor: CookingPot,
   Pişiyor: Flame,
   "Servise Hazır": Timer,

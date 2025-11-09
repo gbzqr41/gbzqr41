@@ -37,11 +37,11 @@ export default function RegisterPage() {
   const progressWidth = useMemo(() => `${((step + 1) / stepContent.length) * 100}%`, [step]);
 
   const handleNext = () => {
-    setStep((prev) => Math.min((prev + 1) as Step, 2));
+    setStep((prev) => (prev < 2 ? ((prev + 1) as Step) : prev));
   };
 
   const handlePrev = () => {
-    setStep((prev) => Math.max((prev - 1) as Step, 0));
+    setStep((prev) => (prev > 0 ? ((prev - 1) as Step) : prev));
   };
 
   const handleChange =
