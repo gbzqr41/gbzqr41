@@ -10,11 +10,13 @@ import {
   Boxes,
   Settings,
   User,
+  Users,
   Sun,
   Moon,
   Save,
   Shield,
   Bell,
+  CalendarDays,
   ArrowUpRight,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -30,6 +32,8 @@ const sidebarItems = [
   { label: "Raporlar", icon: BarChart3, href: "/dashboard/reports" },
   { label: "Ön Muhasebe", icon: FileText, href: "/dashboard/accounting" },
   { label: "Stok", icon: Boxes, href: "/dashboard/stock" },
+  { label: "Rezervasyon", icon: CalendarDays, href: "/dashboard/reservation" },
+  { label: "Garson", icon: Users, href: "/dashboard/garson" },
   { label: "Ayarlar", icon: Settings, href: "/dashboard/settings", active: true },
   { label: "Profil", icon: User, href: "/dashboard/profile" },
 ];

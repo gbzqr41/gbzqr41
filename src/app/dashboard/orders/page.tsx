@@ -5,11 +5,12 @@ import {
   ClipboardList,
   ChefHat,
   QrCode,
-  BarChart,
+  BarChart3,
   FileText,
   Boxes,
   Settings,
   User,
+  Users,
   Sun,
   Moon,
   ShoppingBag,
@@ -17,6 +18,9 @@ import {
   Clock,
   CheckCircle,
   XCircle,
+  PanelLeft,
+  CalendarDays,
+  PhoneCall,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
@@ -131,9 +135,12 @@ const sidebarItems = [
   { label: "Siparişler", icon: ClipboardList, href: "/dashboard/orders", active: true },
   { label: "Mutfak", icon: ChefHat, href: "/dashboard/kitchen" },
   { label: "QR Menü", icon: QrCode, href: "/dashboard/qr-menu" },
-  { label: "Raporlar", icon: BarChart, href: "/dashboard/reports" },
+  { label: "Raporlar", icon: BarChart3, href: "/dashboard/reports" },
   { label: "Ön Muhasebe", icon: FileText, href: "/dashboard/accounting" },
-  { label: "Stok", icon: Boxes, href: "/dashboard/stock" },
+  { label: "Stok", icon: Boxes, tag: "Çok yakında" },
+  { label: "Call All", icon: PhoneCall, tag: "Çok yakında" },
+  { label: "Rezervasyon", icon: CalendarDays, href: "/dashboard/reservation" },
+  { label: "Garson", icon: Users, href: "/dashboard/garson" },
   { label: "Ayarlar", icon: Settings, href: "/dashboard/settings" },
   { label: "Profil", icon: User, href: "/dashboard/profile" },
 ];
@@ -141,6 +148,7 @@ const sidebarItems = [
 export default function OrdersBoardPage() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<BoardOrder | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const initials = useMemo(() => {
@@ -201,9 +209,26 @@ export default function OrdersBoardPage() {
         data-open={isSidebarOpen}
         onClick={() => setSidebarOpen(false)}
       />
-      <div className={layoutStyles.page} data-theme={theme}>
-        <aside className={layoutStyles.sidebar} data-open={isSidebarOpen}>
+      <div
+        className={clsx(layoutStyles.page, isSidebarCollapsed && layoutStyles.pageCollapsed)}
+        data-theme={theme}
+      >
+        <aside
+          className={clsx(
+            layoutStyles.sidebar,
+            isSidebarCollapsed && layoutStyles.sidebarCollapsed,
+          )}
+          data-open={isSidebarOpen}
+        >
           <div className={layoutStyles.logo}>GBZQR</div>
+          <button
+            type="button"
+            className={layoutStyles.toggleSidebar}
+            onClick={() => setSidebarCollapsed((prev) => !prev)}
+            aria-label="Menüyü daralt"
+          >
+            <PanelLeft className={layoutStyles.toggleSidebarIcon} size={16} />
+          </button>
           <nav className={layoutStyles.navList}>
             {sidebarItems.map((item) => (
               <a
@@ -214,8 +239,9 @@ export default function OrdersBoardPage() {
                 )}
                 href={item.href ?? "#"}
               >
-                <item.icon />
-                <span>{item.label}</span>
+                <item.icon size={18} />
+                <span className={layoutStyles.navLabel}>{item.label}</span>
+                {item.tag && <span className={layoutStyles.navTag}>{item.tag}</span>}
               </a>
             ))}
           </nav>

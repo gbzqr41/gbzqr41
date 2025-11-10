@@ -10,12 +10,14 @@ import {
   Boxes,
   Settings,
   User,
+  Users,
   Sun,
   Moon,
   DownloadCloud,
   ArrowUpRight,
   Filter,
   Wallet,
+  CalendarDays,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import clsx from "clsx";
@@ -30,6 +32,8 @@ const sidebarItems = [
   { label: "Raporlar", icon: BarChart3, href: "/dashboard/reports" },
   { label: "Ön Muhasebe", icon: FileText, href: "/dashboard/accounting", active: true },
   { label: "Stok", icon: Boxes, href: "/dashboard/stock" },
+  { label: "Rezervasyon", icon: CalendarDays, href: "/dashboard/reservation" },
+  { label: "Garson", icon: Users, href: "/dashboard/garson" },
   { label: "Ayarlar", icon: Settings, href: "/dashboard/settings" },
   { label: "Profil", icon: User, href: "/dashboard/profile" },
 ];

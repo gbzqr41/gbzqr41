@@ -1,0 +1,230 @@
+.reservationWrapper {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 320px minmax(0, 1fr);
+}
+
+.calendarPanel {
+  background: var(--dash-surface);
+  border-radius: 24px;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 24px 60px var(--dash-shadow);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.profileSection {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.profileSection img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.profileImage {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profileSection h3 {
+  font-size: 1.1rem;
+}
+
+.monthSwitcher {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.monthSwitcher button {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--dash-border);
+  background: rgba(17, 17, 17, 0.05);
+  cursor: pointer;
+}
+
+.monthGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.dayCell,
+.weekdayCell {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border-radius: 12px;
+}
+
+.weekdayCell {
+  color: var(--dash-text-muted);
+  font-size: 0.8rem;
+}
+
+.dayCellActive {
+  background: var(--dash-text);
+  color: var(--dash-bg);
+}
+
+.eventPreview {
+  border-radius: 18px;
+  border: 1px solid var(--dash-border);
+  background: rgba(17, 17, 17, 0.05);
+  padding: 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.eventPreview strong {
+  font-size: 1rem;
+}
+
+.eventButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid var(--dash-border);
+  background: rgba(17, 17, 17, 0.08);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.calendarLegend {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.schedulePanel {
+  background: var(--dash-surface);
+  border-radius: 24px;
+  border: 1px solid var(--dash-border);
+  box-shadow: 0 24px 60px var(--dash-shadow);
+  padding: 1.75rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.scheduleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.rangeTabs,
+.viewTabs {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 14px;
+  border: 1px solid var(--dash-border);
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.rangeButton,
+.viewButton {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  cursor: pointer;
+}
+
+.rangeButtonActive,
+.viewButtonActive {
+  background: var(--dash-text);
+  color: var(--dash-bg);
+  box-shadow: 0 18px 40px rgba(17, 17, 17, 0.22);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.timeColumn {
+  display: grid;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--dash-text-muted);
+}
+
+.eventsColumn {
+  display: grid;
+  gap: 1rem;
+}
+
+.eventCard {
+  border-radius: 18px;
+  border-left: 4px solid transparent;
+  padding: 1rem 1.2rem;
+  background: rgba(17, 17, 17, 0.05);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.eventMeta {
+  font-size: 0.85rem;
+  color: var(--dash-text-muted);
+}
+
+.participantList {
+  display: flex;
+  align-items: center;
+}
+
+.participantList img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--dash-surface);
+  margin-left: -12px;
+}
+
+.participantAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--dash-surface);
+  object-fit: cover;
+}
+
+.participantList img:first-of-type {
+  margin-left: 0;
+}
+
+@media (max-width: 1024px) {
+  .reservationWrapper {
+    grid-template-columns: 1fr;
+  }
+}
