@@ -16,8 +16,6 @@ import {
   PanelLeft,
   CalendarDays,
   MoonStar,
-  EyeOff,
-  ArrowUpRight,
   Search,
   Bell,
   MessageCircle,
@@ -26,16 +24,16 @@ import {
   Phone,
   Mail,
   MapPin,
-  Check,
   PhoneCall,
   Receipt,
   Star,
   RefreshCw,
   MoreVertical,
   Lock,
+  X,
 } from "lucide-react";
 import clsx from "clsx";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import styles from "./page.module.css";
 import { useCallback } from "react";
 
@@ -110,34 +108,6 @@ const orderRanges = {
 
 type OrderRangeKey = keyof typeof orderRanges;
 
-const featureCards = [
-  {
-    title: "Connect your Google Business Profile",
-    description: "Easily import your business details. Keep your info up-to-date.",
-    accent: "#9e8bff",
-  },
-  {
-    title: "Ödemeyi Aktifleştir",
-    description: "Ödeme entegrasyonunuzu sorunsuz kurun ve ödemeleri kabul etmeye başlayın.",
-    accent: "#ff647c",
-  },
-  {
-    title: "Rezervasyon Alın",
-    description: "Online rezervasyonları yönetin ve masa yönetimini optimize edin.",
-    accent: "#a283ff",
-  },
-  {
-    title: "Mekan Logonu Ekle",
-    description: "Menünüzü yansıtmak için logo ekleyin.",
-    accent: "#31b6a1",
-  },
-  {
-    title: "Tasarımını Kişiselleştir",
-    description: "Kişiselleştirilmiş menü tasarımlarıyla işletme kimliğinizi vurgulayın.",
-    accent: "#ff8570",
-  },
-];
-
 const customers = [
   {
     name: "Ayça Akar",
@@ -174,12 +144,140 @@ const orders = [
   },
 ];
 
-const latestOrders = [
-  { code: "SIP-6210", platform: "Getir", status: "Teslim Edildi" },
-  { code: "SIP-6211", platform: "Yemeksepeti", status: "Hazırlanıyor" },
-  { code: "SIP-6212", platform: "Trendyol", status: "Yolda" },
-  { code: "SIP-6213", platform: "Migros", status: "Hazırlanıyor" },
-  { code: "SIP-6214", platform: "Telefon", status: "Teslim Edildi" },
+type OrderStep = {
+  label: string;
+  time: string;
+};
+
+type LatestOrder = {
+  code: string;
+  platform: string;
+  status: string;
+  progress: number;
+  steps: OrderStep[];
+  customer: string;
+  table?: string;
+  channel: string;
+  total: number;
+  items: Array<{ name: string; qty: number }>;
+  notes?: string;
+  address?: string;
+  phone?: string;
+  eta?: string;
+};
+
+const latestOrders: LatestOrder[] = [
+  {
+    code: "SIP-6210",
+    platform: "Getir",
+    status: "Teslim Edildi",
+    progress: 3,
+    steps: [
+      { label: "Sipariş Alındı", time: "21:05" },
+      { label: "Hazırlanıyor", time: "21:08" },
+      { label: "Kuryede", time: "21:22" },
+      { label: "Teslim Edildi", time: "21:36" },
+    ],
+    customer: "Ayça Akar",
+    channel: "Getir",
+    total: 482.5,
+    items: [
+      { name: "Izgara Somon", qty: 1 },
+      { name: "Cheesecake", qty: 1 },
+      { name: "Limonata", qty: 2 },
+    ],
+    notes: "Tatlıyı fındıksız gönderin.",
+    phone: "+90 555 123 45 67",
+    eta: "Teslim edildi",
+  },
+  {
+    code: "SIP-6211",
+    platform: "Yemeksepeti",
+    status: "Hazırlanıyor",
+    progress: 1,
+    steps: [
+      { label: "Sipariş Alındı", time: "21:42" },
+      { label: "Hazırlanıyor", time: "21:44" },
+      { label: "Kuryede", time: "-" },
+      { label: "Teslim Edildi", time: "-" },
+    ],
+    customer: "Mert Çelik",
+    channel: "Yemeksepeti",
+    total: 236.75,
+    items: [
+      { name: "GBZ Burger", qty: 2 },
+      { name: "Patates Kızartması", qty: 2 },
+      { name: "Kola", qty: 2 },
+    ],
+    notes: "Ekstra ketçap.",
+    phone: "+90 531 456 23 11",
+    eta: "Teslimat 20 dk",
+  },
+  {
+    code: "SIP-6212",
+    platform: "Trendyol Yemek",
+    status: "Kuryede",
+    progress: 2,
+    steps: [
+      { label: "Sipariş Alındı", time: "21:18" },
+      { label: "Hazırlanıyor", time: "21:21" },
+      { label: "Kuryede", time: "21:35" },
+      { label: "Teslim Edilecek", time: "21:52" },
+    ],
+    customer: "Selin Kaya",
+    channel: "Trendyol Yemek",
+    total: 318.4,
+    items: [
+      { name: "Tavuk Fajita", qty: 1 },
+      { name: "Nachos", qty: 1 },
+      { name: "Soğuk Çay", qty: 2 },
+    ],
+    notes: "Acısız olsun.",
+    phone: "+90 533 777 88 22",
+    eta: "Teslimat 12 dk",
+  },
+  {
+    code: "SIP-6213",
+    platform: "Migros Yemek",
+    status: "Hazırlanıyor",
+    progress: 1,
+    steps: [
+      { label: "Sipariş Alındı", time: "21:30" },
+      { label: "Hazırlanıyor", time: "21:33" },
+      { label: "Kuryede", time: "-" },
+      { label: "Teslim Edilecek", time: "-" },
+    ],
+    customer: "Berkay Demir",
+    channel: "Migros Yemek",
+    total: 198.2,
+    items: [
+      { name: "Kremalı Makarna", qty: 1 },
+      { name: "Tiramisu", qty: 1 },
+    ],
+    phone: "+90 555 111 22 38",
+    eta: "Teslimat 28 dk",
+  },
+  {
+    code: "SIP-6214",
+    platform: "QR Sipariş",
+    status: "Teslim Edildi",
+    progress: 3,
+    steps: [
+      { label: "Sipariş Alındı", time: "21:10" },
+      { label: "Hazırlanıyor", time: "21:12" },
+      { label: "Serviste", time: "21:19" },
+      { label: "Teslim Edildi", time: "21:20" },
+    ],
+    customer: "Masa 12",
+    table: "Masa 12",
+    channel: "QR Masa",
+    total: 156.0,
+    items: [
+      { name: "Mercimek Çorbası", qty: 2 },
+      { name: "Izgara Köfte", qty: 2 },
+    ],
+    notes: "Çorba sıcak olsun.",
+  },
 ];
 
 const latestFeedback = [
@@ -208,6 +306,60 @@ const announcements = [
   { title: "Varlık güncellemesi", body: "Mutfak POS entegrasyonu başarıyla tamamlandı." },
 ];
 
+const salesChannels = [
+  { id: "yemeksepeti", label: "Yemeksepeti", color: "#1f2937", baseShare: 0.26 },
+  { id: "getir", label: "Getir", color: "#374151", baseShare: 0.18 },
+  { id: "trendyol", label: "Trendyol Yemek", color: "#4b5563", baseShare: 0.16 },
+  { id: "migros", label: "Migros Yemek", color: "#6b7280", baseShare: 0.12 },
+  { id: "qr", label: "QR Sipariş", color: "#9ca3af", baseShare: 0.15 },
+  { id: "masa", label: "Masa Sipariş", color: "#d1d5db", baseShare: 0.13 },
+] as const;
+
+type SalesChannelId = (typeof salesChannels)[number]["id"];
+
+const salesChannelMap = salesChannels.reduce<
+  Record<SalesChannelId, (typeof salesChannels)[number]>
+>((acc, channel) => {
+  acc[channel.id] = channel;
+  return acc;
+}, {} as Record<SalesChannelId, (typeof salesChannels)[number]>);
+
+const hourlySalesTotals = [
+  420.75, 315.2, 280.4, 198.6, 165.3, 210.8, 340.5, 455.9, 612.35, 745.6, 890.2,
+  1045.75, 1280.4, 1405.9, 1324.6, 1188.3, 1265.45, 1390.1, 1524.8, 1660.25,
+  1745.6, 1885.35, 1720.15, 1488.7,
+] as const;
+
+const salesData: Array<{
+  hour: string;
+  total: number;
+  breakdown: Array<{ id: SalesChannelId; amount: number }>;
+}> = hourlySalesTotals.map((total, index) => {
+  const hour = `${String(index).padStart(2, "0")}:00`;
+  const variations = salesChannels.map((channel, channelIndex) => {
+    const wave = Math.sin((index + channelIndex * 2.3) * 0.55);
+    return Math.max(channel.baseShare + wave * 0.035, 0.06);
+  });
+  const variationSum = variations.reduce((sum, value) => sum + value, 0);
+  const rawAmounts = variations.map((value) => (value / variationSum) * total);
+  const roundedAmounts = rawAmounts.map((value) => Math.round(value * 100) / 100);
+  const roundedSum = roundedAmounts.reduce((sum, value) => sum + value, 0);
+  const diff = Math.round((total - roundedSum) * 100) / 100;
+  if (diff !== 0) {
+    roundedAmounts[0] = Math.round((roundedAmounts[0] + diff) * 100) / 100;
+  }
+  const breakdown = salesChannels.map((channel, idx) => ({
+    id: channel.id,
+    amount: roundedAmounts[idx],
+  }));
+  const totalRounded = Math.round(total * 100) / 100;
+  return {
+    hour,
+    total: totalRounded,
+    breakdown,
+  };
+});
+
 export default function DashboardPage() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -227,20 +379,30 @@ export default function DashboardPage() {
   const notificationRef = useRef<HTMLDivElement>(null);
   const [isMessageOpen, setMessageOpen] = useState(false);
   const messageRef = useRef<HTMLDivElement>(null);
-  const [isFeatureStripVisible, setFeatureStripVisible] = useState(true);
-  const [featureList, setFeatureList] = useState(() =>
-    featureCards.map((card, index) => ({
-      ...card,
-      id: index,
-      completed: index % 2 === 0,
-    })),
-  );
   const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
   const [isLockScreenOpen, setLockScreenOpen] = useState(false);
   const [lockInput, setLockInput] = useState("");
   const [lockError, setLockError] = useState("");
   const [now, setNow] = useState(new Date());
+  const welcomeRef = useRef<HTMLElement>(null);
+  const latestOrdersRef = useRef<HTMLElement>(null);
+  const [welcomeHeight, setWelcomeHeight] = useState<number>(400);
+  const [activeOrder, setActiveOrder] = useState<LatestOrder | null>(null);
+  const maxSales = useMemo(
+    () => Math.max(...salesData.map((item) => item.total)),
+    [],
+  );
+  const totalSales = useMemo(
+    () =>
+      salesData
+        .reduce((sum, item) => sum + item.total, 0)
+        .toLocaleString("tr-TR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+    [],
+  );
   const initials = useMemo(() => {
     const name = "Ezgi Kaplan";
     return name
@@ -309,6 +471,16 @@ export default function DashboardPage() {
     return () => clearInterval(timer);
   }, []);
 
+  useLayoutEffect(() => {
+    const updateWelcomeHeight = () => {
+      setWelcomeHeight(400);
+    };
+
+    updateWelcomeHeight();
+    window.addEventListener("resize", updateWelcomeHeight);
+    return () => window.removeEventListener("resize", updateWelcomeHeight);
+  }, []);
+
   const filteredCustomers = searchTerm
     ? customers.filter((customer) =>
         customer.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -320,10 +492,6 @@ export default function DashboardPage() {
         order.code.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     : [];
-
-  const dismissFeature = (id: number) => {
-    setFeatureList((prev) => prev.filter((item) => item.id !== id));
-  };
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -632,13 +800,28 @@ export default function DashboardPage() {
           <main className={styles.main}>
             <section className={styles.topRow}>
               <div className={styles.topMain}>
-                <section className={styles.welcome}>
-                  <h1 className={styles.welcomeTitle}>
-                    <span className={styles.welcomeIcon}>
-                      <MoonStar size={22} />
-                    </span>
-                    İyi Geceler, Ezgi
-                  </h1>
+                <section
+                  className={styles.welcome}
+                  ref={welcomeRef}
+                  style={
+                    welcomeHeight
+                      ? {
+                          height: `${welcomeHeight}px`,
+                        }
+                      : undefined
+                  }
+                >
+                  <div className={styles.welcomeTop}>
+                    <h1 className={styles.welcomeTitle}>
+                      <span className={styles.welcomeIcon}>
+                        <MoonStar size={22} />
+                      </span>
+                      İyi Geceler, Ezgi
+                    </h1>
+                    <button type="button" className={styles.profileEditButton}>
+                      Profili Düzenle
+                    </button>
+                  </div>
                   <p>
                     Bugün restoranın performansı güçlü görünüyor. 4 bekleyen siparişi
                     takip etmeyi unutma.
@@ -658,63 +841,113 @@ export default function DashboardPage() {
                     })}
                   </time>
                 </section>
-                {isFeatureStripVisible && featureList.length > 0 && (
-                  <div className={styles.featureStrip}>
-                    <div className={styles.featureStripHeader}>
-                      <span>DAHA İYİ BİR DENEYİM İÇİN TÜM ÖZELLİKLERİ KEŞFET</span>
-                      <button
-                        type="button"
-                        className={styles.featureStripHide}
-                        onClick={() => setFeatureStripVisible(false)}
-                      >
-                        <EyeOff size={16} /> Gizle
-                      </button>
-                    </div>
-                    <div className={styles.featureStripGrid}>
-                      {featureList.map((card) => (
-                        <article
-                          key={card.id}
-                          className={styles.featureCard}
-                          onClick={() => dismissFeature(card.id)}
-                        >
-                          <div className={styles.featureHeader}>
-                            <span
+                <section className={styles.statsCard}>
+                  <div className={styles.statsGrid}>
+                    <article className={styles.highlightCard}>
+                      <div className={styles.highlightHeader}>
+                        <div className={styles.highlightTitle}>
+                          <span>Sipariş</span>
+                          <span className={styles.highlightValue}>
+                            {orderRanges[orderRange].value}
+                          </span>
+                        </div>
+                        <div className={styles.highlightButtons}>
+                          {(Object.keys(orderRanges) as OrderRangeKey[]).map((key) => (
+                            <button
+                              key={key}
+                              type="button"
                               className={clsx(
-                                styles.featureCheck,
-                                card.completed && styles.featureCheckActive,
+                                styles.rangeButton,
+                                orderRange === key && styles.rangeButtonActive,
                               )}
+                              onClick={() => setOrderRange(key)}
                             >
-                              {card.completed && <Check size={12} />}
-                            </span>
-                            <h3>{card.title}</h3>
+                              {orderRanges[key].label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className={styles.highlightFooter}>
+                        <span>{orderRanges[orderRange].subtitle}</span>
+                        <strong>{orderRanges[orderRange].growth}</strong>
+                      </div>
+                    </article>
+                    {stats.map((stat, index) => (
+                      <article
+                        key={stat.label}
+                        className={clsx(
+                          styles.statCard,
+                          styles.statCardDivider,
+                          index % 2 === 1 && styles.statCardDividerLeft,
+                        )}
+                      >
+                        <div className={styles.statTop}>
+                          <span className={styles.statIcon}>
+                            <stat.icon size={20} />
+                          </span>
+                          <div className={styles.statMeta}>
+                            <h3 className={styles.statValue}>{stat.value}</h3>
+                            <p className={styles.statLabel}>{stat.label}</p>
                           </div>
-                          <p className={styles.featureText}>
-                            {card.description}
-                            <ArrowUpRight size={14} />
-                          </p>
-                        </article>
-                      ))}
-                    </div>
+                        </div>
+                        <div className={styles.statFooter}>{stat.change}</div>
+                      </article>
+                    ))}
                   </div>
-                )}
+                </section>
               </div>
               <aside className={styles.topAside}>
-                <article className={styles.latestCard}>
+                <article className={styles.latestCard} ref={latestOrdersRef}>
                   <header>
                     <span>Son 5 Sipariş</span>
                   </header>
                   <div className={styles.latestList}>
-                    {latestOrders.map((item) => (
-                      <div key={item.code} className={styles.latestItem}>
-                        <span className={styles.latestIcon}>
-                          <Receipt size={16} />
-                        </span>
-                        <div className={styles.latestBody}>
-                          <strong>{item.code}</strong>
-                          <p>{item.platform}</p>
+                    {latestOrders.map((order) => (
+                      <button
+                        key={order.code}
+                        type="button"
+                        className={styles.latestItem}
+                        onClick={() => setActiveOrder(order)}
+                      >
+                        <div className={styles.latestStepTrack}>
+                          {order.steps.map((step, stepIndex) => (
+                            <div key={step.label} className={styles.latestStepNode}>
+                              <span
+                                className={clsx(
+                                  styles.latestStepPoint,
+                                  stepIndex <= order.progress && styles.latestStepPointActive,
+                                )}
+                              />
+                              {stepIndex < order.steps.length - 1 && (
+                                <span className={styles.latestStepConnector} />
+                              )}
+                              <span className={styles.latestStepLabel}>{step.label}</span>
+                              <span className={styles.latestStepTime}>{step.time}</span>
+                            </div>
+                          ))}
                         </div>
-                        <span>{item.status}</span>
-                      </div>
+                        <div className={styles.latestBody}>
+                          <div className={styles.latestBodyHeader}>
+                            <span className={styles.latestIcon}>
+                              <Receipt size={16} />
+                            </span>
+                            <div>
+                              <strong>{order.code}</strong>
+                              <p>{order.platform}</p>
+                            </div>
+                          </div>
+                          <div className={styles.latestBodyFooter}>
+                            <span className={styles.latestStatus}>{order.status}</span>
+                            <span className={styles.latestTotal}>
+                              {order.total.toLocaleString("tr-TR", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}{" "}
+                              TL
+                            </span>
+                          </div>
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </article>
@@ -738,50 +971,99 @@ export default function DashboardPage() {
                 </article>
               </aside>
             </section>
-            <section className={styles.statsGrid}>
-              <article className={styles.highlightCard}>
-                <div className={styles.highlightHeader}>
-                  <div className={styles.highlightTitle}>
-                    <span>Sipariş</span>
-                    <span className={styles.highlightValue}>
-                      {orderRanges[orderRange].value}
-                    </span>
-                  </div>
-                  <div className={styles.highlightButtons}>
-                    {(Object.keys(orderRanges) as OrderRangeKey[]).map((key) => (
-                      <button
-                        key={key}
-                        type="button"
+            <section className={styles.salesCard}>
+              <div className={styles.salesHeader}>
+                <div>
+                  <span className={styles.salesLabel}>24 Saatlik Satış</span>
+                  <strong className={styles.salesTotal}>{totalSales} TL</strong>
+                </div>
+                <a className={styles.salesLink} href="/dashboard/reports">
+                  Raporları görüntüle
+                </a>
+              </div>
+              <div className={styles.salesChart}>
+                {salesData.map((item, index) => {
+                  const isPeak = item.total === maxSales;
+                  return (
+                    <div
+                      key={item.hour}
+                      className={clsx(
+                        styles.salesBar,
+                        index >= salesData.length - 4 && styles.salesBarReverseTooltip,
+                      )}
+                    >
+                      <span className={styles.salesAmount}>
+                        {item.total.toLocaleString("tr-TR", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}{" "}
+                        TL
+                      </span>
+                      <div
                         className={clsx(
-                          styles.rangeButton,
-                          orderRange === key && styles.rangeButtonActive,
+                          styles.salesBarStack,
+                          isPeak && styles.salesBarStackPeak,
                         )}
-                        onClick={() => setOrderRange(key)}
+                        style={{
+                          height: `${Math.round((item.total / maxSales) * 100)}%`,
+                        }}
                       >
-                        {orderRanges[key].label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.highlightFooter}>
-                  <span>{orderRanges[orderRange].subtitle}</span>
-                  <strong>{orderRanges[orderRange].growth}</strong>
-                </div>
-              </article>
-              {stats.map((stat) => (
-                <article key={stat.label} className={styles.statCard}>
-                  <div className={styles.statTop}>
-                    <span className={styles.statIcon}>
-                      <stat.icon size={20} />
-                    </span>
-                    <div className={styles.statMeta}>
-                      <h3 className={styles.statValue}>{stat.value}</h3>
-                      <p className={styles.statLabel}>{stat.label}</p>
+                        {item.breakdown.map((segment) => {
+                          const channel = salesChannelMap[segment.id];
+                          if (!channel) return null;
+                          const segmentHeight =
+                            item.total > 0 ? (segment.amount / item.total) * 100 : 0;
+                          return (
+                            <div
+                              key={segment.id}
+                              className={styles.salesBarSegment}
+                              style={{
+                                height: `${segmentHeight}%`,
+                                backgroundColor: channel.color,
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                      <span className={styles.salesHour}>{item.hour}</span>
+                      <div className={styles.salesDetails}>
+                        {item.breakdown.map((segment) => {
+                          const channel = salesChannelMap[segment.id];
+                          return (
+                            <div key={segment.id} className={styles.salesDetailRow}>
+                              <span
+                                className={styles.salesDetailDot}
+                                style={{ backgroundColor: channel.color }}
+                              />
+                              <div>
+                                <strong>{channel.label}</strong>
+                                <p>
+                                  {segment.amount.toLocaleString("tr-TR", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}{" "}
+                                  TL
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
+                  );
+                })}
+              </div>
+              <div className={styles.salesLegend}>
+                {salesChannels.map((channel) => (
+                  <div key={channel.id} className={styles.salesLegendItem}>
+                    <span
+                      className={styles.salesLegendDot}
+                      style={{ backgroundColor: channel.color }}
+                    />
+                    <span>{channel.label}</span>
                   </div>
-                  <div className={styles.statFooter}>{stat.change}</div>
-                </article>
-              ))}
+                ))}
+              </div>
             </section>
           </main>
         </section>
@@ -813,6 +1095,98 @@ export default function DashboardPage() {
             <button type="button" onClick={handleLockSubmit}>
               Kilidi Aç
             </button>
+          </div>
+        </div>
+      )}
+      {activeOrder && (
+        <div
+          className={styles.orderModalOverlay}
+          onClick={() => setActiveOrder(null)}
+          role="presentation"
+        >
+          <div
+            className={styles.orderModal}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header className={styles.orderModalHeader}>
+              <div>
+                <span className={styles.orderModalLabel}>Sipariş Özeti</span>
+                <h2>{activeOrder.code}</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.orderModalClose}
+                onClick={() => setActiveOrder(null)}
+                aria-label="Siparişi kapat"
+              >
+                <X size={16} />
+              </button>
+            </header>
+            <div className={styles.orderModalBody}>
+              <div className={styles.orderModalSection}>
+                <span className={styles.orderModalSectionLabel}>Durum</span>
+                <div className={styles.orderModalSteps}>
+                  {activeOrder.steps.map((step, index) => (
+                    <div key={step.label} className={styles.orderModalStep}>
+                      <span
+                        className={clsx(
+                          styles.orderModalStepPoint,
+                          index <= activeOrder.progress && styles.orderModalStepPointActive,
+                        )}
+                      />
+                      {index < activeOrder.steps.length - 1 && (
+                        <span className={styles.orderModalStepConnector} />
+                      )}
+                      <div>
+                        <strong>{step.label}</strong>
+                        <p>{step.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.orderModalSectionGrid}>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Müşteri</span>
+                  <strong>{activeOrder.customer}</strong>
+                  {activeOrder.phone && <p>{activeOrder.phone}</p>}
+                </div>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Kanal</span>
+                  <strong>{activeOrder.channel}</strong>
+                  {activeOrder.table && <p>{activeOrder.table}</p>}
+                  {activeOrder.eta && <p>{activeOrder.eta}</p>}
+                </div>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Tutar</span>
+                  <strong>
+                    {activeOrder.total.toLocaleString("tr-TR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                    TL
+                  </strong>
+                  {activeOrder.notes && <p>{activeOrder.notes}</p>}
+                </div>
+              </div>
+              <div className={styles.orderModalSection}>
+                <span className={styles.orderModalSectionLabel}>Ürünler</span>
+                <ul className={styles.orderModalItems}>
+                  {activeOrder.items.map((item) => (
+                    <li key={item.name}>
+                      <span>{item.name}</span>
+                      <span>×{item.qty}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <footer className={styles.orderModalFooter}>
+              <button type="button">Yazdır</button>
+              <button type="button">PDF Aktar</button>
+              <button type="button">Excel Aktar</button>
+              <button type="button">WhatsApp</button>
+            </footer>
           </div>
         </div>
       )}
