@@ -280,6 +280,16 @@ const latestOrders: LatestOrder[] = [
   },
 ];
 
+const stepIcons: Record<string, typeof ClipboardList> = {
+  "Sipariş Alındı": ClipboardList,
+  Hazırlanıyor: ChefHat,
+  Kuryede: Boxes,
+  Serviste: Users,
+  "Teslim Edildi": Star,
+  "Teslim Edilecek": CalendarDays,
+  "Teslim edildi": Star,
+};
+
 const latestFeedback = [
   { name: "Selin Kaya", message: "Servis çok hızlıydı, teşekkürler!" },
   { name: "Baran Usta", message: "Tatlılar harikaydı." },
@@ -902,49 +912,100 @@ export default function DashboardPage() {
                     <span>Son 5 Sipariş</span>
                   </header>
                   <div className={styles.latestList}>
-                    {latestOrders.map((order) => (
+                    {latestOrders.slice(0, 1).map((order) => (
                       <button
                         key={order.code}
                         type="button"
                         className={styles.latestItem}
                         onClick={() => setActiveOrder(order)}
                       >
-                        <div className={styles.latestStepTrack}>
-                          {order.steps.map((step, stepIndex) => (
-                            <div key={step.label} className={styles.latestStepNode}>
-                              <span
-                                className={clsx(
-                                  styles.latestStepPoint,
-                                  stepIndex <= order.progress && styles.latestStepPointActive,
-                                )}
-                              />
-                              {stepIndex < order.steps.length - 1 && (
-                                <span className={styles.latestStepConnector} />
-                              )}
-                              <span className={styles.latestStepLabel}>{step.label}</span>
-                              <span className={styles.latestStepTime}>{step.time}</span>
+                        <div className={styles.latestItemContent}>
+                          <div className={styles.latestInfo}>
+                            <div className={styles.latestBody}>
+                              <div className={styles.latestBodyHeader}>
+                                <span className={styles.latestIcon}>
+                                  <Receipt size={16} />
+                                </span>
+                                <div>
+                                  <strong>{order.code}</strong>
+                                  <p>{order.platform}</p>
+                                </div>
+                              </div>
+                              <div className={styles.latestBodyFooter}>
+                                <span className={styles.latestStatus}>{order.status}</span>
+                                <span className={styles.latestTotal}>
+                                  {order.total.toLocaleString("tr-TR", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}{" "}
+                                  TL
+                                </span>
+                              </div>
                             </div>
-                          ))}
-                        </div>
-                        <div className={styles.latestBody}>
-                          <div className={styles.latestBodyHeader}>
-                            <span className={styles.latestIcon}>
-                              <Receipt size={16} />
-                            </span>
-                            <div>
-                              <strong>{order.code}</strong>
-                              <p>{order.platform}</p>
+                            <div className={styles.latestInfoDetails}>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Müşteri</span>
+                                <strong>{order.customer}</strong>
+                                {order.phone && <p>{order.phone}</p>}
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Kanal</span>
+                                <strong>{order.platform}</strong>
+                                {order.table && <p>{order.table}</p>}
+                                {order.eta && <p>{order.eta}</p>}
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Sipariş</span>
+                                <strong>{order.channel}</strong>
+                                {order.address && <p>{order.address}</p>}
+                              </div>
+                            </div>
+                            <div className={styles.latestItemsWrapper}>
+                              <span className={styles.latestDetailLabel}>Sipariş Menüsü</span>
+                              <ul className={styles.latestItems}>
+                                {order.items.map((item) => (
+                                  <li key={item.name}>
+                                    <span>{item.name}</span>
+                                    <span>×{item.qty}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                              {order.notes && (
+                                <p className={styles.latestNote}>{order.notes}</p>
+                              )}
                             </div>
                           </div>
-                          <div className={styles.latestBodyFooter}>
-                            <span className={styles.latestStatus}>{order.status}</span>
-                            <span className={styles.latestTotal}>
-                              {order.total.toLocaleString("tr-TR", {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}{" "}
-                              TL
-                            </span>
+                          <div className={styles.latestStepsColumn}>
+                            <div className={styles.latestStepTrack}>
+                              {order.steps.map((step, stepIndex) => {
+                                const StepIcon = stepIcons[step.label] ?? RefreshCw;
+                                const isStepActive = stepIndex <= order.progress;
+                                return (
+                                  <div
+                                    key={step.label}
+                                    className={clsx(
+                                      styles.latestStepNode,
+                                      isStepActive && styles.latestStepNodeActive,
+                                    )}
+                                  >
+                                    <div className={styles.latestStepContent}>
+                                      <span className={styles.latestStepLabel}>
+                                        {step.label}
+                                      </span>
+                                      <span className={styles.latestStepTime}>{step.time}</span>
+                                    </div>
+                                    <span
+                                      className={clsx(
+                                        styles.latestStepIcon,
+                                        isStepActive && styles.latestStepIconActive,
+                                      )}
+                                    >
+                                      <StepIcon size={16} />
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
                       </button>
