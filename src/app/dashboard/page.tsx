@@ -31,25 +31,24 @@ import {
   MoreVertical,
   Lock,
   X,
+  Plus,
+  Grid3x3,
+  Check,
 } from "lucide-react";
 import clsx from "clsx";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import styles from "./page.module.css";
 import { useCallback } from "react";
+import { Icon } from "@iconify/react";
 
-const sidebarItems = [
-  { label: "Pano", icon: LayoutDashboard, active: true, href: "/dashboard" },
-  { label: "Siparişler", icon: ClipboardList, href: "/dashboard/orders" },
-  { label: "Mutfak", icon: ChefHat, href: "/dashboard/kitchen" },
-  { label: "QR Menü", icon: QrCode, href: "/dashboard/qr-menu" },
-  { label: "Raporlar", icon: BarChart, href: "/dashboard/reports" },
-  { label: "Ön Muhasebe", icon: FileText, href: "/dashboard/accounting" },
-  { label: "Stok", icon: Boxes, tag: "Çok yakında" },
-  { label: "Call All", icon: PhoneCall, tag: "Çok yakında" },
-  { label: "Rezervasyon", icon: CalendarDays, href: "/dashboard/reservation" },
-  { label: "Garson", icon: Users, href: "/dashboard/garson" },
-  { label: "Ayarlar", icon: Settings, href: "/dashboard/settings" },
-  { label: "Profil", icon: User, href: "/dashboard/profile" },
+const sidebarItems: Array<{
+  label: string;
+  icon: string | React.ComponentType<any>;
+  active?: boolean;
+  href?: string;
+  useIconify?: boolean;
+}> = [
+  { label: "Pano", icon: "mdi:view-dashboard", active: true, href: "/dashboard", useIconify: true },
 ];
 
 const stats = [
@@ -391,13 +390,18 @@ export default function DashboardPage() {
   const messageRef = useRef<HTMLDivElement>(null);
   const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
+  const [isRestaurantPopupOpen, setRestaurantPopupOpen] = useState(false);
+  const restaurantPopupRef = useRef<HTMLDivElement>(null);
+  const [selectedRestaurant, setSelectedRestaurant] = useState("Örnek Et");
+  const [activeReservation, setActiveReservation] = useState<any>(null);
+  const [hoveredTablePercentage, setHoveredTablePercentage] = useState<number | null>(null);
   const [isLockScreenOpen, setLockScreenOpen] = useState(false);
   const [lockInput, setLockInput] = useState("");
   const [lockError, setLockError] = useState("");
   const [now, setNow] = useState(new Date());
   const welcomeRef = useRef<HTMLElement>(null);
   const latestOrdersRef = useRef<HTMLElement>(null);
-  const [welcomeHeight, setWelcomeHeight] = useState<number>(400);
+  const [welcomeHeight, setWelcomeHeight] = useState<number>(360);
   const [activeOrder, setActiveOrder] = useState<LatestOrder | null>(null);
   const maxSales = useMemo(
     () => Math.max(...salesData.map((item) => item.total)),
@@ -421,6 +425,14 @@ export default function DashboardPage() {
       .join("")
       .toUpperCase();
   }, []);
+
+  const greeting = useMemo(() => {
+    const hour = now.getHours();
+    if (hour >= 0 && hour < 12) return "Günaydın";
+    if (hour >= 12 && hour < 18) return "İyi günler";
+    if (hour >= 18 && hour < 21) return "İyi akşamlar";
+    return "İyi geceler";
+  }, [now]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -458,6 +470,9 @@ export default function DashboardPage() {
       if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
         setMoreMenuOpen(false);
       }
+      if (restaurantPopupRef.current && !restaurantPopupRef.current.contains(event.target as Node)) {
+        setRestaurantPopupOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -483,7 +498,7 @@ export default function DashboardPage() {
 
   useLayoutEffect(() => {
     const updateWelcomeHeight = () => {
-      setWelcomeHeight(400);
+      setWelcomeHeight(360);
     };
 
     updateWelcomeHeight();
@@ -550,6 +565,46 @@ export default function DashboardPage() {
               <PanelLeft className={styles.toggleSidebarIcon} size={16} />
             </button>
           </div>
+          <div className={styles.restaurantSection} ref={restaurantPopupRef}>
+            <button
+              type="button"
+              className={styles.restaurantButton}
+              onClick={() => setRestaurantPopupOpen((prev) => !prev)}
+            >
+              <span className={styles.restaurantName}>{selectedRestaurant}</span>
+            </button>
+            {isRestaurantPopupOpen && (
+              <div className={styles.restaurantPopup}>
+                <button type="button" className={styles.restaurantAddButton}>
+                  Ekle
+                </button>
+                <div className={styles.restaurantList}>
+                  <div 
+                    className={clsx(styles.restaurantItem, selectedRestaurant === "Örnek Et" && styles.restaurantItemSelected)}
+                    onClick={() => setSelectedRestaurant("Örnek Et")}
+                  >
+                    Örnek Et
+                    {selectedRestaurant === "Örnek Et" && (
+                      <span className={styles.restaurantCheck}>
+                        <Check size={14} />
+                      </span>
+                    )}
+                  </div>
+                  <div 
+                    className={clsx(styles.restaurantItem, selectedRestaurant === "Örnek Et 2" && styles.restaurantItemSelected)}
+                    onClick={() => setSelectedRestaurant("Örnek Et 2")}
+                  >
+                    Örnek Et 2
+                    {selectedRestaurant === "Örnek Et 2" && (
+                      <span className={styles.restaurantCheck}>
+                        <Check size={14} />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
           <nav className={styles.navList}>
             {sidebarItems.map((item) => (
               <a
@@ -560,254 +615,40 @@ export default function DashboardPage() {
                 )}
                 href={item.href ?? "#"}
               >
-                <item.icon size={18} />
+                <span className={styles.navItemIcon}>
+                  {item.useIconify ? (
+                    <Icon icon={item.icon as string} width={18} height={18} />
+                  ) : (
+                    <item.icon size={18} strokeWidth={1.5} />
+                  )}
+                </span>
                 <span className={styles.navLabel}>{item.label}</span>
-                {item.tag && <span className={styles.navTag}>{item.tag}</span>}
               </a>
             ))}
           </nav>
+          <button type="button" className={styles.addSectionButton}>
+            <span className={styles.addSectionIcon}>
+              <Grid3x3 size={18} strokeWidth={1.5} />
+              <Plus size={12} strokeWidth={2.5} className={styles.addSectionPlus} />
+            </span>
+            <span className={styles.addSectionLabel}>Add a section</span>
+          </button>
         </aside>
         <section className={styles.content}>
-          <header className={styles.header}>
-            <button
-              className={styles.sidebarToggle}
-              type="button"
-              onClick={() => setSidebarOpen((prev) => !prev)}
-              aria-label="Menüyü aç"
-            >
-              <LayoutDashboard size={20} />
-            </button>
-            <div className={styles.headerSearchWrapper} ref={searchWrapperRef}>
-              <div className={styles.headerSearch}>
-                <Search size={16} className={styles.headerSearchIcon} />
-                <input
-                  type="search"
-                  placeholder="Panelde ara"
-                  ref={searchInputRef}
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  onFocus={() => setSearchOpen(true)}
-                />
-                <div className={styles.headerSearchKeys}>
-                  <span className={styles.keycap}>⌘</span>
-                  <span className={styles.keycap}>Ctrl</span>
-                  <span className={styles.keycap}>F</span>
+          <div className={styles.contentInner}>
+            <div className={styles.pageHeader}>
+              <div>
+                <div className={styles.breadcrumb}>
+                  <span>Anasayfa /</span>
+                  <span className={styles.breadcrumbCurrent}>Pano</span>
                 </div>
+                <div className={styles.pageTitle}>Gösterge Tablosu</div>
               </div>
-              {isSearchOpen && searchTerm && (
-                <div className={styles.searchResults}>
-                  {filteredCustomers.length > 0 && (
-                    <div className={styles.searchSection}>
-                      <span className={styles.searchSectionLabel}>Müşteriler</span>
-                      {filteredCustomers.map((customer) => (
-                        <div key={customer.name} className={styles.searchCustomer}>
-                          <img src={customer.avatar} alt={customer.name} />
-                          <div>
-                            <strong>{customer.name}</strong>
-                            <p>{customer.role}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {filteredOrders.length > 0 && (
-                    <div className={styles.searchSection}>
-                      <span className={styles.searchSectionLabel}>Siparişler</span>
-                      {filteredOrders.map((order) => (
-                        <div key={order.code} className={styles.searchOrder}>
-                          <div>
-                            <strong>{order.code}</strong>
-                            <p>{order.status} sipariş</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {filteredCustomers.length === 0 && filteredOrders.length === 0 && (
-                    <div className={styles.searchEmpty}>Sonuç bulunamadı.</div>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className={styles.headerActions}>
-              <button
-                type="button"
-                className={styles.iconButton}
-                onClick={() => window.location.reload()}
-                title="Sayfayı Yenile"
-              >
-                <RefreshCw size={18} />
+              <button type="button" className={styles.searchIconButton}>
+                <Search size={18} />
               </button>
-              <div className={styles.supportWrapper} ref={supportRef}>
-                <button
-                  type="button"
-                  className={styles.supportButton}
-                  onClick={() => setSupportOpen((prev) => !prev)}
-                >
-                  <LifeBuoy size={18} />
-                  Destek
-                </button>
-                {isSupportOpen && (
-                  <div className={styles.supportMenu}>
-                    <span>Telefon</span>
-                    <strong>0 (212) 555 00 99</strong>
-                    <span>E-posta</span>
-                    <strong>destek@gbzqr.com</strong>
-                    <span>Adres</span>
-                    <strong>Refik Kadın Sk. No:12, İstanbul</strong>
-                  </div>
-                )}
-              </div>
-              <div className={styles.announcementWrapper} ref={announcementRef}>
-                <button
-                  type="button"
-                  className={styles.iconButton}
-                  onClick={() => setAnnouncementOpen((prev) => !prev)}
-                >
-                  <Megaphone size={18} />
-                </button>
-                {isAnnouncementOpen && (
-                  <div className={styles.dropdownPanel}>
-                    <header>
-                      <strong>Duyurular</strong>
-                    </header>
-                    <div className={styles.dropdownList}>
-                      {announcements.map((item) => (
-                        <div key={item.title} className={styles.dropdownItem}>
-                          <h4>{item.title}</h4>
-                          <p>{item.body}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className={styles.announcementWrapper} ref={notificationRef}>
-                <button
-                  type="button"
-                  className={clsx(styles.iconButton, styles.iconButtonDot)}
-                  onClick={() => setNotificationOpen((prev) => !prev)}
-                >
-                  <Bell size={18} />
-                </button>
-                {isNotificationOpen && (
-                  <div className={styles.dropdownPanel}>
-                    <header>
-                      <strong>Bildirimler</strong>
-                    </header>
-                    <div className={styles.dropdownList}>
-                      {notifications.map((item) => (
-                        <div key={item.title} className={styles.dropdownItem}>
-                          <h4>{item.title}</h4>
-                          <p>{item.detail}</p>
-                          <span>{item.time}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className={styles.announcementWrapper} ref={messageRef}>
-                <button
-                  type="button"
-                  className={clsx(styles.iconButton, styles.iconButtonDot)}
-                  onClick={() => setMessageOpen((prev) => !prev)}
-                >
-                  <MessageCircle size={18} />
-                </button>
-                {isMessageOpen && (
-                  <div className={styles.dropdownPanel}>
-                    <header>
-                      <strong>Mesajlar</strong>
-                    </header>
-                    <div className={styles.dropdownList}>
-                      {messages.map((item) => (
-                        <div key={item.name} className={styles.dropdownItem}>
-                          <h4>{item.name}</h4>
-                          <p>{item.snippet}</p>
-                          <span>{item.time}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className={styles.moreWrapper} ref={moreMenuRef}>
-                <button
-                  type="button"
-                  className={styles.iconButton}
-                  onClick={() => setMoreMenuOpen((prev) => !prev)}
-                  title="Daha fazla"
-                >
-                  <MoreVertical size={18} />
-                </button>
-                {isMoreMenuOpen && (
-                  <div className={styles.dropdownPanel}>
-                    <div className={styles.dropdownList}>
-                      <button
-                        type="button"
-                        className={styles.dropdownAction}
-                        onClick={() => {
-                          toggleFullscreen();
-                          setMoreMenuOpen(false);
-                        }}
-                      >
-                        Tam ekran
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.dropdownAction}
-                        onClick={() => {
-                          setLockScreenOpen(true);
-                          setMoreMenuOpen(false);
-                        }}
-                      >
-                        Ekran kilidi
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
-            <div className={styles.profileWrapper} ref={profileMenuRef}>
-              <button
-                type="button"
-                className={styles.profile}
-                onClick={() => setProfileMenuOpen((prev) => !prev)}
-              >
-                <div className={styles.avatar}>{initials}</div>
-                <div className={styles.profileInfo}>
-                  <strong>Ezgi Kaplan</strong>
-                  <p className={styles.profileMeta}>Yönetici</p>
-                  <span className={styles.profileBadge}>Premium+</span>
-                </div>
-              </button>
-              {isProfileMenuOpen && (
-                <div className={styles.profileMenu}>
-                  <button type="button">Profil</button>
-                  <button type="button">Ayarlar</button>
-                  <button
-                    type="button"
-                    className={clsx(
-                      styles.themeToggle,
-                      theme === "dark" && styles.themeToggleDark,
-                    )}
-                    onClick={() =>
-                      setTheme((prev) => (prev === "light" ? "dark" : "light"))
-                    }
-                  >
-                    <span className={styles.themeIconWrap}>
-                      <Sun size={14} />
-                      <Moon size={14} />
-                    </span>
-                    {theme === "light" ? "Karanlık Mod" : "Aydınlık Mod"}
-                  </button>
-                  <button type="button">Çıkış</button>
-                </div>
-              )}
-            </div>
-          </header>
-          <main className={styles.main}>
+            <main className={styles.main}>
             <section className={styles.topRow}>
               <div className={styles.topMain}>
                 <section
@@ -826,16 +667,10 @@ export default function DashboardPage() {
                       <span className={styles.welcomeIcon}>
                         <MoonStar size={22} />
                       </span>
-                      İyi Geceler, Ezgi
+                      <span className={styles.welcomeGreeting}>{greeting}</span>, <span className={styles.welcomeNameSmall}>Ezgi</span>
                     </h1>
-                    <button type="button" className={styles.profileEditButton}>
-                      Profili Düzenle
-                    </button>
                   </div>
-                  <p>
-                    Bugün restoranın performansı güçlü görünüyor. 4 bekleyen siparişi
-                    takip etmeyi unutma.
-                  </p>
+                  <div className={styles.welcomeFullName}>Ezgi AKÇABAT</div>
                   <time className={styles.welcomeTime} dateTime={now.toISOString()}>
                     {now.toLocaleTimeString("tr-TR", {
                       hour: "2-digit",
@@ -850,66 +685,213 @@ export default function DashboardPage() {
                       year: "numeric",
                     })}
                   </time>
-                </section>
-                <section className={styles.statsCard}>
-                  <div className={styles.statsGrid}>
-                    <article className={styles.highlightCard}>
-                      <div className={styles.highlightHeader}>
-                        <div className={styles.highlightTitle}>
-                          <span>Sipariş</span>
-                          <span className={styles.highlightValue}>
-                            {orderRanges[orderRange].value}
-                          </span>
-                        </div>
-                        <div className={styles.highlightButtons}>
-                          {(Object.keys(orderRanges) as OrderRangeKey[]).map((key) => (
-                            <button
-                              key={key}
-                              type="button"
-                              className={clsx(
-                                styles.rangeButton,
-                                orderRange === key && styles.rangeButtonActive,
-                              )}
-                              onClick={() => setOrderRange(key)}
-                            >
-                              {orderRanges[key].label}
-                            </button>
-                          ))}
-                        </div>
+                  <div style={{
+                    position: "absolute",
+                    right: "1.5rem",
+                    bottom: "-40px",
+                    width: "210px",
+                    height: "360px",
+                    background: "linear-gradient(135deg, #8e8e93 0%, #636366 100%)",
+                    borderRadius: "40px 40px 0 0",
+                    padding: "10px",
+                    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                    zIndex: 0,
+                  }}>
+                    <div style={{
+                      width: "100%",
+                      height: "100%",
+                      background: "#ffffff",
+                      borderRadius: "32px 32px 0 0",
+                      padding: "15px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}>
+                      <div style={{
+                        width: "140px",
+                        height: "140px",
+                        background: "#ffffff",
+                        border: "2px solid #e0e0e0",
+                        borderRadius: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "10px",
+                      }}>
+                        <div style={{
+                          width: "100%",
+                          height: "100%",
+                          background: "repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 50% / 20px 20px",
+                          borderRadius: "8px",
+                        }} />
                       </div>
-                      <div className={styles.highlightFooter}>
-                        <span>{orderRanges[orderRange].subtitle}</span>
-                        <strong>{orderRanges[orderRange].growth}</strong>
-                      </div>
-                    </article>
-                    {stats.map((stat, index) => (
-                      <article
-                        key={stat.label}
-                        className={clsx(
-                          styles.statCard,
-                          styles.statCardDivider,
-                          index % 2 === 1 && styles.statCardDividerLeft,
-                        )}
-                      >
-                        <div className={styles.statTop}>
-                          <span className={styles.statIcon}>
-                            <stat.icon size={20} />
-                          </span>
-                          <div className={styles.statMeta}>
-                            <h3 className={styles.statValue}>{stat.value}</h3>
-                            <p className={styles.statLabel}>{stat.label}</p>
-                          </div>
-                        </div>
-                        <div className={styles.statFooter}>{stat.change}</div>
-                      </article>
-                    ))}
+                    </div>
                   </div>
                 </section>
-              </div>
-              <aside className={styles.topAside}>
+                <section className={styles.topMain} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                  <article className={styles.latestCard}>
+                    <header>
+                      <span>Günün En Yoğun Saatleri</span>
+                    </header>
+                    <div style={{ padding: "1rem" }}>
+                      <div style={{ marginBottom: "1rem" }}>
+                        <strong style={{ fontSize: "1.5rem" }}>Toplam Müşteri</strong>
+                        <p style={{ fontSize: "2rem", fontWeight: "bold", marginTop: "0.5rem" }}>127</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: "0.5rem", height: "200px", marginTop: "1rem" }}>
+                        {[
+                          { hour: "12:00", value: 35, height: "80%" },
+                          { hour: "13:00", value: 45, height: "100%" },
+                          { hour: "14:00", value: 30, height: "67%" },
+                          { hour: "19:00", value: 42, height: "93%" },
+                          { hour: "20:00", value: 38, height: "84%" },
+                        ].map((item, index) => (
+                          <div key={index} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
+                            <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
+                              <div style={{ width: "100%", background: "linear-gradient(180deg, #111111 0%, #3d3d3d 100%)", borderRadius: "8px 8px 0 0", height: item.height, minHeight: "40px", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: "0.5rem" }}>
+                                <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.85rem" }}>{item.value}</span>
+                              </div>
+                              <span style={{ fontSize: "0.75rem", color: "var(--dash-text-muted)" }}>{item.hour}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                  <article className={styles.latestCard}>
+                    <header>
+                      <span>En Yoğun Masalar</span>
+                    </header>
+                    <div style={{ padding: "1rem" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        {[
+                          { table: "Masa 8", orders: 24, customers: 48 },
+                          { table: "Masa 12", orders: 19, customers: 38 },
+                          { table: "Masa 5", orders: 17, customers: 34 },
+                          { table: "Masa 15", orders: 15, customers: 30 },
+                          { table: "Masa 3", orders: 14, customers: 28 },
+                        ].map((item, index) => (
+                          <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem" }}>{item.table}</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>{item.orders} Sipariş</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.1rem" }}>{item.customers}</strong>
+                              <span style={{ fontSize: "0.75rem", color: "var(--dash-text-muted)" }}>Müşteri</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                  <article className={styles.latestCard}>
+                    <header>
+                      <span>En Çok Tüketilen Ürünler</span>
+                    </header>
+                    <div style={{ padding: "1rem" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        {[
+                          { product: "Adana Kebap", count: 89, unit: "adet" },
+                          { product: "Lahmacun", count: 76, unit: "adet" },
+                          { product: "Çorba", count: 65, unit: "porsiyon" },
+                          { product: "Pide", count: 54, unit: "adet" },
+                          { product: "Salata", count: 48, unit: "porsiyon" },
+                        ].map((item, index) => (
+                          <div key={index} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem" }}>{item.product}</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>{item.unit}</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.1rem" }}>{item.count}</strong>
+                              <span style={{ fontSize: "0.75rem", color: "var(--dash-text-muted)" }}>Toplam</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                  <article className={styles.latestCard}>
+                    <header>
+                      <span>Masa Durumu</span>
+                    </header>
+                    <div style={{ padding: "1rem", position: "relative", display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "150px",
+                          height: "150px",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={() => setHoveredTablePercentage(10)}
+                        onMouseLeave={() => setHoveredTablePercentage(null)}
+                      >
+                        <svg width="150" height="150" style={{ transform: "rotate(-90deg)" }}>
+                          <circle
+                            cx="75"
+                            cy="75"
+                            r="65"
+                            fill="none"
+                            stroke="#e0e0e0"
+                            strokeWidth="10"
+                          />
+                          <circle
+                            cx="75"
+                            cy="75"
+                            r="65"
+                            fill="none"
+                            stroke="#ff6b35"
+                            strokeWidth="10"
+                            strokeDasharray={2 * Math.PI * 65}
+                            strokeDashoffset={2 * Math.PI * 65 - (10 / 100) * 2 * Math.PI * 65}
+                            style={{ transition: "all 0.3s ease" }}
+                          />
+                        </svg>
+                        <div style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          textAlign: "center",
+                        }}>
+                          <strong style={{ fontSize: "1.8rem", fontWeight: "700" }}>10%</strong>
+                        </div>
+                        {hoveredTablePercentage === 10 && (
+                          <div style={{
+                            position: "absolute",
+                            top: "110%",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            background: "var(--dash-surface)",
+                            border: "1px solid var(--dash-border)",
+                            borderRadius: "12px",
+                            padding: "0.75rem",
+                            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+                            zIndex: 10,
+                            minWidth: "120px",
+                            whiteSpace: "nowrap",
+                          }}>
+                            <div style={{ fontSize: "0.85rem", fontWeight: "600", marginBottom: "0.5rem", color: "var(--dash-text-muted)" }}>
+                              Masalar
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                              {["Masa 3", "Masa 7"].map((table, tableIndex) => (
+                                <span key={tableIndex} style={{ fontSize: "0.8rem", color: "var(--dash-text)" }}>
+                                  {table}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                </section>
                 <article className={styles.latestCard} ref={latestOrdersRef}>
                   <header>
-                    <span>Son 5 Sipariş</span>
+                    <span>Son Sipariş</span>
                   </header>
                   <div className={styles.latestList}>
                     {latestOrders.slice(0, 1).map((order) => (
@@ -976,32 +958,21 @@ export default function DashboardPage() {
                             </div>
                           </div>
                           <div className={styles.latestStepsColumn}>
-                            <div className={styles.latestStepTrack}>
-                              {order.steps.map((step, stepIndex) => {
-                                const StepIcon = stepIcons[step.label] ?? RefreshCw;
-                                const isStepActive = stepIndex <= order.progress;
+                            <div className={styles.latestStepTrack} style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ffa500 50%, #ff4757 100%)", borderRadius: "12px", padding: "1rem" }}>
+                              {order.steps.filter(step => step.label === "Sipariş Alındı" || step.label === "Hazırlanıyor").map((step, stepIndex) => {
+                                const originalIndex = order.steps.findIndex(s => s.label === step.label);
+                                const isStepActive = originalIndex <= order.progress;
                                 return (
                                   <div
                                     key={step.label}
-                                    className={clsx(
-                                      styles.latestStepNode,
-                                      isStepActive && styles.latestStepNodeActive,
-                                    )}
+                                    style={{
+                                      color: isStepActive ? "#000000" : "#808080",
+                                      fontWeight: isStepActive ? "600" : "400",
+                                      fontSize: "0.95rem",
+                                      marginBottom: stepIndex < 1 ? "0.5rem" : "0",
+                                    }}
                                   >
-                                    <div className={styles.latestStepContent}>
-                                      <span className={styles.latestStepLabel}>
-                                        {step.label}
-                                      </span>
-                                      <span className={styles.latestStepTime}>{step.time}</span>
-                                    </div>
-                                    <span
-                                      className={clsx(
-                                        styles.latestStepIcon,
-                                        isStepActive && styles.latestStepIconActive,
-                                      )}
-                                    >
-                                      <StepIcon size={16} />
-                                    </span>
+                                    {step.label}
                                   </div>
                                 );
                               })}
@@ -1012,21 +983,69 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 </article>
-                <article className={styles.latestCard}>
+              </div>
+              <aside className={styles.topAside}>
+                <article className={styles.latestCard} style={{ height: "360px", display: "flex", flexDirection: "column" }}>
                   <header>
-                    <span>Son 5 Geri Bildirim</span>
+                    <span>Yaklaşan Rezervasyon</span>
                   </header>
-                  <div className={styles.latestList}>
-                    {latestFeedback.map((item) => (
-                      <div key={item.name} className={styles.latestItem}>
-                        <span className={styles.latestIcon}>
-                          <Star size={16} />
-                        </span>
-                        <div className={styles.latestBody}>
-                          <strong>{item.name}</strong>
-                          <p>{item.message}</p>
+                  <div className={styles.latestList} style={{ flex: 1, overflow: "hidden" }}>
+                    {[
+                      { 
+                        id: "REZ-1001", 
+                        customer: "Ahmet Yılmaz", 
+                        date: now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }),
+                        time: `${String(now.getHours()).padStart(2, "0")}:00`,
+                        status: "Onaylandı", 
+                        guests: 4, 
+                        phone: "+90 555 123 45 67",
+                        table: "Masa 8",
+                        notes: "Pencere kenarı tercih ediyor",
+                        email: "ahmet.yilmaz@example.com"
+                      },
+                    ].map((reservation) => (
+                      <button
+                        key={reservation.id}
+                        type="button"
+                        className={styles.latestItem}
+                        onClick={() => setActiveReservation(reservation)}
+                      >
+                        <div className={styles.latestItemContent}>
+                          <div className={styles.latestInfo}>
+                            <div className={styles.latestBody}>
+                              <div className={styles.latestBodyHeader}>
+                                <span className={styles.latestIcon}>
+                                  <CalendarDays size={16} />
+                                </span>
+                                <div>
+                                  <strong>{reservation.id}</strong>
+                                  <p>{reservation.customer}</p>
+                                </div>
+                              </div>
+                              <div className={styles.latestBodyFooter}>
+                                <span className={styles.latestStatus}>{reservation.status}</span>
+                                <span className={styles.latestTotal}>{reservation.time}</span>
+                              </div>
+                            </div>
+                            <div className={styles.latestInfoDetails}>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Müşteri</span>
+                                <strong>{reservation.customer}</strong>
+                                <p>{reservation.phone}</p>
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Tarih</span>
+                                <strong>{reservation.date}</strong>
+                                <p>{reservation.guests} Kişi</p>
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Durum</span>
+                                <strong>{reservation.status}</strong>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </article>
@@ -1127,6 +1146,7 @@ export default function DashboardPage() {
               </div>
             </section>
           </main>
+          </div>
         </section>
       </div>
       {isLockScreenOpen && (
@@ -1249,6 +1269,68 @@ export default function DashboardPage() {
               <button type="button">WhatsApp</button>
             </footer>
           </div>
+        </div>
+      )}
+      {activeReservation && (
+        <div
+          className={styles.orderModal}
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+          }}
+        >
+            <header className={styles.orderModalHeader}>
+              <div>
+                <span className={styles.orderModalLabel}>Rezervasyon Detayı</span>
+                <h2>{activeReservation.id}</h2>
+              </div>
+              <button
+                type="button"
+                className={styles.orderModalClose}
+                onClick={() => setActiveReservation(null)}
+                aria-label="Rezervasyonu kapat"
+              >
+                <X size={16} />
+              </button>
+            </header>
+            <div className={styles.orderModalBody}>
+              <div className={styles.orderModalSectionGrid}>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Müşteri</span>
+                  <strong>{activeReservation.customer}</strong>
+                  {activeReservation.phone && <p>{activeReservation.phone}</p>}
+                  {activeReservation.email && <p>{activeReservation.email}</p>}
+                </div>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Tarih & Saat</span>
+                  <strong>{activeReservation.date}</strong>
+                  <p>{activeReservation.time}</p>
+                </div>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Durum</span>
+                  <strong>{activeReservation.status}</strong>
+                  {activeReservation.table && <p>{activeReservation.table}</p>}
+                </div>
+                <div>
+                  <span className={styles.orderModalSectionLabel}>Kişi Sayısı</span>
+                  <strong>{activeReservation.guests} Kişi</strong>
+                </div>
+              </div>
+              {activeReservation.notes && (
+                <div className={styles.orderModalSection}>
+                  <span className={styles.orderModalSectionLabel}>Notlar</span>
+                  <p>{activeReservation.notes}</p>
+                </div>
+              )}
+            </div>
+            <footer className={styles.orderModalFooter}>
+              <button type="button">Onayla</button>
+              <button type="button">İptal Et</button>
+              <button type="button">Düzenle</button>
+            </footer>
         </div>
       )}
     </>
