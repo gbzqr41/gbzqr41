@@ -36,6 +36,8 @@ import {
   Check,
   UserPlus,
   LogOut,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import clsx from "clsx";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -405,6 +407,8 @@ export default function DashboardPage() {
   const welcomeRef = useRef<HTMLElement>(null);
   const latestOrdersRef = useRef<HTMLElement>(null);
   const [welcomeHeight, setWelcomeHeight] = useState<number>(360);
+  const [isTodosVisible, setIsTodosVisible] = useState<boolean>(true);
+  const [isStatsVisible, setIsStatsVisible] = useState<boolean>(true);
   const [activeOrder, setActiveOrder] = useState<LatestOrder | null>(null);
   const maxSales = useMemo(
     () => Math.max(...salesData.map((item) => item.total)),
@@ -1037,141 +1041,42 @@ export default function DashboardPage() {
                 </div>
                 <div className={styles.pageTitle}>Gösterge Tablosu</div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <div style={{ position: "relative", display: "flex", alignItems: "center", flexShrink: 0 }}>
-                  <Search size={18} strokeWidth={1.5} style={{ position: "absolute", left: "0.75rem", color: "var(--dash-text-muted)", pointerEvents: "none", zIndex: 1 }} />
-                  <input
-                    type="text"
-                    placeholder="Ara..."
-                    style={{
-                      padding: "0.75rem 0.75rem 0.75rem 2.5rem",
-                      borderRadius: "12px",
-                      border: "1px solid var(--dash-border)",
-                      background: "var(--dash-surface)",
-                      color: "var(--dash-text)",
-                      fontSize: "0.9rem",
-                      width: "280px",
-                      minWidth: "200px",
-                      outline: "none",
-                      boxSizing: "border-box",
-                    }}
-                    onFocus={(e) => {
-                      e.currentTarget.style.borderColor = "var(--dash-text)";
-                    }}
-                    onBlur={(e) => {
-                      e.currentTarget.style.borderColor = "var(--dash-border)";
-                    }}
-                  />
-                </div>
-                <button
-                  type="button"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    padding: "0.75rem 1rem",
-                    borderRadius: "12px",
-                    border: "1px solid var(--dash-border)",
-                    background: "var(--dash-surface)",
-                    color: "var(--dash-text)",
-                    fontSize: "0.85rem",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    transition: "background 0.2s ease",
-                    flexShrink: 0,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--dash-hover)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "var(--dash-surface)";
-                  }}
-                >
-                  <span>CTRL</span>
-                  <span style={{ color: "var(--dash-text-muted)" }}>+</span>
-                  <span>F</span>
-                </button>
-                <input
-                  type="date"
-                  style={{
-                    height: "40px",
-                    padding: "0 1rem",
-                    borderRadius: "50px",
-                    border: "1px solid var(--dash-border)",
-                    background: "var(--dash-bg)",
-                    fontSize: "0.85rem",
-                    color: "var(--dash-text)",
-                    cursor: "pointer",
-                    minWidth: "140px",
-                    transition: "all 0.22s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--dash-hover)";
-                    e.currentTarget.style.borderColor = "rgba(17, 17, 17, 0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "var(--dash-bg)";
-                    e.currentTarget.style.borderColor = "var(--dash-border)";
-                  }}
-                />
-                <button
-                  type="button"
-                  style={{
-                    height: "40px",
-                    padding: "0 1.25rem",
-                    borderRadius: "50px",
-                    border: "1px solid var(--dash-border)",
-                    background: "var(--dash-bg)",
-                    fontSize: "0.85rem",
-                    fontWeight: "600",
-                    color: "var(--dash-text)",
-                    cursor: "pointer",
-                    transition: "all 0.22s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--dash-hover)";
-                    e.currentTarget.style.borderColor = "rgba(17, 17, 17, 0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "var(--dash-bg)";
-                    e.currentTarget.style.borderColor = "var(--dash-border)";
-                  }}
-                >
-                  <UserPlus size={16} />
-                  Davet Et
-                </button>
-                <button type="button" className={styles.searchIconButton} style={{ position: "relative" }}>
-                  <Bell size={18} />
-                  <span style={{
-                    position: "absolute",
-                    top: "4px",
-                    right: "4px",
-                    width: "12px",
-                    height: "12px",
-                    borderRadius: "50%",
-                    background: "#ff4757",
-                    border: "2px solid var(--dash-bg)",
-                  }} />
-                </button>
-                <button type="button" className={styles.searchIconButton} style={{ position: "relative" }}>
-                  <MessageCircle size={18} />
-                  <span style={{
-                    position: "absolute",
-                    top: "4px",
-                    right: "4px",
-                    width: "12px",
-                    height: "12px",
-                    borderRadius: "50%",
-                    background: "#ff4757",
-                    border: "2px solid var(--dash-bg)",
-                  }} />
-                </button>
-              </div>
             </div>
             <main className={styles.main}>
+            <div style={{ padding: "30px", background: "rgba(17, 17, 17, 0.05)", borderRadius: "12px", marginBottom: "1.5rem", position: "relative" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                <div style={{ fontSize: "1.1rem", fontWeight: "600", color: "var(--dash-text)" }}>YAPILACAKLAR</div>
+                <button type="button" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", background: "transparent", border: "none", color: "var(--dash-text)", fontSize: "0.9rem", fontWeight: "500", cursor: "pointer", transition: "all 0.2s ease" }} onClick={() => setIsTodosVisible(!isTodosVisible)}>
+                  <span>{isTodosVisible ? "Gizle" : "Aç"}</span>
+                  {isTodosVisible ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+                </button>
+              </div>
+              {isTodosVisible && (
+              <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                <div style={{ width: "250px", height: "250px", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", padding: "1rem", position: "relative", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--dash-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--dash-border)"; }}>
+                  <div style={{ width: "30px", height: "30px", border: "2px solid var(--dash-border)", borderRadius: "50%", position: "absolute", top: "1rem", left: "1rem", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s ease" }} onClick={(e) => { e.stopPropagation(); const circle = e.currentTarget; if (circle.style.background === "var(--dash-text)") { circle.style.background = "transparent"; circle.querySelector("svg")?.remove(); } else { circle.style.background = "var(--dash-text)"; const check = document.createElementNS("http://www.w3.org/2000/svg", "svg"); check.setAttribute("width", "16"); check.setAttribute("height", "16"); check.setAttribute("viewBox", "0 0 24 24"); check.setAttribute("fill", "none"); check.setAttribute("stroke", "white"); check.setAttribute("stroke-width", "2.5"); check.setAttribute("stroke-linecap", "round"); check.setAttribute("stroke-linejoin", "round"); const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", "M20 6L9 17l-5-5"); check.appendChild(path); circle.appendChild(check); } }}>
+                  </div>
+                  <div style={{ marginTop: "2.5rem" }}>
+                    <strong style={{ fontSize: "1rem", color: "var(--dash-text)" }}>Sipariş Oluştur</strong>
+                  </div>
+                </div>
+                <div style={{ width: "250px", height: "250px", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", padding: "1rem", position: "relative", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--dash-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--dash-border)"; }}>
+                  <div style={{ width: "30px", height: "30px", border: "2px solid var(--dash-border)", borderRadius: "50%", position: "absolute", top: "1rem", left: "1rem", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s ease" }} onClick={(e) => { e.stopPropagation(); const circle = e.currentTarget; if (circle.style.background === "var(--dash-text)") { circle.style.background = "transparent"; circle.querySelector("svg")?.remove(); } else { circle.style.background = "var(--dash-text)"; const check = document.createElementNS("http://www.w3.org/2000/svg", "svg"); check.setAttribute("width", "16"); check.setAttribute("height", "16"); check.setAttribute("viewBox", "0 0 24 24"); check.setAttribute("fill", "none"); check.setAttribute("stroke", "white"); check.setAttribute("stroke-width", "2.5"); check.setAttribute("stroke-linecap", "round"); check.setAttribute("stroke-linejoin", "round"); const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", "M20 6L9 17l-5-5"); check.appendChild(path); circle.appendChild(check); } }}>
+                  </div>
+                  <div style={{ marginTop: "2.5rem" }}>
+                    <strong style={{ fontSize: "1rem", color: "var(--dash-text)" }}>QR Oluştur</strong>
+                  </div>
+                </div>
+                <div style={{ width: "250px", height: "250px", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", padding: "1rem", position: "relative", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--dash-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--dash-border)"; }}>
+                  <div style={{ width: "30px", height: "30px", border: "2px solid var(--dash-border)", borderRadius: "50%", position: "absolute", top: "1rem", left: "1rem", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.2s ease" }} onClick={(e) => { e.stopPropagation(); const circle = e.currentTarget; if (circle.style.background === "var(--dash-text)") { circle.style.background = "transparent"; circle.querySelector("svg")?.remove(); } else { circle.style.background = "var(--dash-text)"; const check = document.createElementNS("http://www.w3.org/2000/svg", "svg"); check.setAttribute("width", "16"); check.setAttribute("height", "16"); check.setAttribute("viewBox", "0 0 24 24"); check.setAttribute("fill", "none"); check.setAttribute("stroke", "white"); check.setAttribute("stroke-width", "2.5"); check.setAttribute("stroke-linecap", "round"); check.setAttribute("stroke-linejoin", "round"); const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); path.setAttribute("d", "M20 6L9 17l-5-5"); check.appendChild(path); circle.appendChild(check); } }}>
+                  </div>
+                  <div style={{ marginTop: "2.5rem" }}>
+                    <strong style={{ fontSize: "1rem", color: "var(--dash-text)" }}>İlk Ürünü Ekle</strong>
+                  </div>
+                </div>
+              </div>
+              )}
+            </div>
             <section className={styles.topRow}>
               <div className={styles.topMain}>
                 <section
@@ -1252,11 +1157,231 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </section>
-                <section className={styles.topMain} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
-                  <article className={styles.latestCard}>
-                    <header>
-                      <span>Günün En Yoğun Saatleri</span>
-                    </header>
+              </div>
+              <aside className={styles.topAside}>
+                <article className={styles.latestCard} style={{ height: welcomeHeight ? `${welcomeHeight}px` : "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                  <header>
+                    <span>Hızlı Linkler</span>
+                  </header>
+                  <div style={{ padding: "1rem", display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gridTemplateRows: "repeat(4, 1fr)", gap: "0.75rem", flex: 1, overflow: "auto", minHeight: 0 }}>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <ClipboardList size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Sipariş Oluştur</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <CalendarDays size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Rezervasyon Al</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <QrCode size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>QR Oluştur</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <FileText size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Menü Ekle</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <BarChart size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Ürün Ekle</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <Receipt size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Ödeme Al</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <Boxes size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Stok Ekle</span>
+                    </button>
+                    <button type="button" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", padding: "1rem", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", cursor: "pointer", transition: "all 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--dash-hover)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "var(--dash-surface)"; }}>
+                      <UserPlus size={20} strokeWidth={1.5} />
+                      <span style={{ fontSize: "0.9rem", fontWeight: "500", color: "var(--dash-text)" }}>Müşteri Ekle</span>
+                    </button>
+                  </div>
+                </article>
+              </aside>
+            </section>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <article className={styles.latestCard} ref={latestOrdersRef} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                  <header>
+                    <span>Son Sipariş</span>
+                  </header>
+                  <div className={styles.latestList} style={{ flex: 1, overflow: "auto" }}>
+                    {latestOrders.slice(0, 1).map((order) => (
+                      <button
+                        key={order.code}
+                        type="button"
+                        className={styles.latestItem}
+                        onClick={() => setActiveOrder(order)}
+                      >
+                        <div className={styles.latestItemContent}>
+                          <div className={styles.latestInfo}>
+                            <div className={styles.latestBody}>
+                              <div className={styles.latestBodyHeader}>
+                                <span className={styles.latestIcon}>
+                                  <Receipt size={16} />
+                                </span>
+                                <div>
+                                  <strong>{order.code}</strong>
+                                  <p>{order.platform}</p>
+                                </div>
+                              </div>
+                              <div className={styles.latestBodyFooter}>
+                                <span className={styles.latestStatus}>{order.status}</span>
+                                <span className={styles.latestTotal}>
+                                  {order.total.toLocaleString("tr-TR", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  })}{" "}
+                                  TL
+                                </span>
+                              </div>
+                            </div>
+                            <div className={styles.latestInfoDetails}>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Müşteri</span>
+                                <strong>{order.customer}</strong>
+                                {order.phone && <p>{order.phone}</p>}
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Kanal</span>
+                                <strong>{order.platform}</strong>
+                                {order.table && <p>{order.table}</p>}
+                                {order.eta && <p>{order.eta}</p>}
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Sipariş</span>
+                                <strong>{order.channel}</strong>
+                                {order.address && <p>{order.address}</p>}
+                              </div>
+                            </div>
+                            <div className={styles.latestItemsWrapper}>
+                              <span className={styles.latestDetailLabel}>Sipariş Menüsü</span>
+                              <ul className={styles.latestItems}>
+                                {order.items.map((item) => (
+                                  <li key={item.name}>
+                                    <span>{item.name}</span>
+                                    <span>×{item.qty}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                              {order.notes && (
+                                <p className={styles.latestNote}>{order.notes}</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className={styles.latestStepsColumn} style={{ height: "100%" }}>
+                            <div className={styles.latestStepTrack} style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ffa500 50%, #ff4757 100%)", borderRadius: "12px", padding: "1rem", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: "0.5rem", position: "relative" }}>
+                              {[
+                                "Sipariş Alındı",
+                                "Hazırlanıyor",
+                                "Paketleniyor",
+                                "Kurye Yolda",
+                                "Teslim Edildi",
+                                "İptal Edildi"
+                              ].map((stepLabel, stepIndex) => {
+                                const isStepActive = stepIndex <= order.progress;
+                                return (
+                                  <div
+                                    key={stepLabel}
+                                    style={{
+                                      color: isStepActive ? "#000000" : "#808080",
+                                      fontWeight: isStepActive ? "600" : "400",
+                                      fontSize: "0.95rem",
+                                    }}
+                                  >
+                                    {stepLabel}
+                                  </div>
+                                );
+                              })}
+                              <div style={{ position: "absolute", bottom: "1rem", right: "1rem" }}>
+                                <Boxes size={64} color="#ffffff" strokeWidth={1} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </article>
+                <article className={styles.latestCard} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                  <header>
+                    <span>Yaklaşan Rezervasyon</span>
+                  </header>
+                  <div className={styles.latestList} style={{ flex: 1, overflow: "hidden" }}>
+                    {[
+                      { 
+                        id: "REZ-1001", 
+                        customer: "Ahmet Yılmaz", 
+                        date: now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }),
+                        time: `${String(now.getHours()).padStart(2, "0")}:00`,
+                        status: "Onaylandı", 
+                        guests: 4, 
+                        phone: "+90 555 123 45 67",
+                        table: "Masa 8",
+                        notes: "Pencere kenarı tercih ediyor",
+                        email: "ahmet.yilmaz@example.com"
+                      },
+                    ].map((reservation) => (
+                      <button
+                        key={reservation.id}
+                        type="button"
+                        className={styles.latestItem}
+                        onClick={() => setActiveReservation(reservation)}
+                      >
+                        <div className={styles.latestItemContent}>
+                          <div className={styles.latestInfo}>
+                            <div className={styles.latestBody}>
+                              <div className={styles.latestBodyHeader}>
+                                <span className={styles.latestIcon}>
+                                  <CalendarDays size={16} />
+                                </span>
+                                <div>
+                                  <strong>{reservation.id}</strong>
+                                  <p>{reservation.customer}</p>
+                                </div>
+                              </div>
+                              <div className={styles.latestBodyFooter}>
+                                <span className={styles.latestStatus}>{reservation.status}</span>
+                                <span className={styles.latestTotal}>{reservation.time}</span>
+                              </div>
+                            </div>
+                            <div className={styles.latestInfoDetails}>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Müşteri</span>
+                                <strong>{reservation.customer}</strong>
+                                <p>{reservation.phone}</p>
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Tarih</span>
+                                <strong>{reservation.date}</strong>
+                                <p>{reservation.guests} Kişi</p>
+                              </div>
+                              <div>
+                                <span className={styles.latestDetailLabel}>Durum</span>
+                                <strong>{reservation.status}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </article>
+                </div>
+                <div style={{ padding: "30px", background: "rgba(17, 17, 17, 0.05)", borderRadius: "12px", marginBottom: "1.5rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                    <div style={{ fontSize: "1.1rem", fontWeight: "600", color: "var(--dash-text)" }}>İSTATİSTİKLER</div>
+                    <button type="button" style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem 1rem", background: "transparent", border: "none", color: "var(--dash-text)", fontSize: "0.9rem", fontWeight: "500", cursor: "pointer", transition: "all 0.2s ease" }} onClick={() => setIsStatsVisible(!isStatsVisible)}>
+                      <span>{isStatsVisible ? "Gizle" : "Aç"}</span>
+                      {isStatsVisible ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
+                    </button>
+                  </div>
+                  <div style={{ overflow: "hidden", transition: "max-height 0.3s ease-out, opacity 0.3s ease-out", maxHeight: isStatsVisible ? "2000px" : "0", opacity: isStatsVisible ? 1 : 0 }}>
+                  <section className={styles.topMain} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                    <article className={styles.latestCard}>
+                      <header>
+                        <span>Günün En Yoğun Saatleri</span>
+                      </header>
                     <div style={{ padding: "1rem" }}>
                       <div style={{ marginBottom: "1rem" }}>
                         <strong style={{ fontSize: "1.5rem" }}>Toplam Müşteri</strong>
@@ -1360,271 +1485,44 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </article>
-                </section>
-                <article className={styles.latestCard} ref={latestOrdersRef} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                  <header>
-                    <span>Son Sipariş</span>
-                  </header>
-                  <div className={styles.latestList} style={{ flex: 1, overflow: "auto" }}>
-                    {latestOrders.slice(0, 1).map((order) => (
-                      <button
-                        key={order.code}
-                        type="button"
-                        className={styles.latestItem}
-                        onClick={() => setActiveOrder(order)}
-                      >
-                        <div className={styles.latestItemContent}>
-                          <div className={styles.latestInfo}>
-                            <div className={styles.latestBody}>
-                              <div className={styles.latestBodyHeader}>
-                                <span className={styles.latestIcon}>
-                                  <Receipt size={16} />
-                                </span>
-                                <div>
-                                  <strong>{order.code}</strong>
-                                  <p>{order.platform}</p>
-                                </div>
-                              </div>
-                              <div className={styles.latestBodyFooter}>
-                                <span className={styles.latestStatus}>{order.status}</span>
-                                <span className={styles.latestTotal}>
-                                  {order.total.toLocaleString("tr-TR", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  })}{" "}
-                                  TL
-                                </span>
-                              </div>
-                            </div>
-                            <div className={styles.latestInfoDetails}>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Müşteri</span>
-                                <strong>{order.customer}</strong>
-                                {order.phone && <p>{order.phone}</p>}
-                              </div>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Kanal</span>
-                                <strong>{order.platform}</strong>
-                                {order.table && <p>{order.table}</p>}
-                                {order.eta && <p>{order.eta}</p>}
-                              </div>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Sipariş</span>
-                                <strong>{order.channel}</strong>
-                                {order.address && <p>{order.address}</p>}
-                              </div>
-                            </div>
-                            <div className={styles.latestItemsWrapper}>
-                              <span className={styles.latestDetailLabel}>Sipariş Menüsü</span>
-                              <ul className={styles.latestItems}>
-                                {order.items.map((item) => (
-                                  <li key={item.name}>
-                                    <span>{item.name}</span>
-                                    <span>×{item.qty}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                              {order.notes && (
-                                <p className={styles.latestNote}>{order.notes}</p>
-                              )}
-                            </div>
-                          </div>
-                          <div className={styles.latestStepsColumn} style={{ height: "100%" }}>
-                            <div className={styles.latestStepTrack} style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ffa500 50%, #ff4757 100%)", borderRadius: "12px", padding: "1rem", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: "0.5rem", position: "relative" }}>
-                              {[
-                                "Sipariş Alındı",
-                                "Hazırlanıyor",
-                                "Paketleniyor",
-                                "Kurye Yolda",
-                                "Teslim Edildi",
-                                "İptal Edildi"
-                              ].map((stepLabel, stepIndex) => {
-                                const isStepActive = stepIndex <= order.progress;
-                                return (
-                                  <div
-                                    key={stepLabel}
-                                    style={{
-                                      color: isStepActive ? "#000000" : "#808080",
-                                      fontWeight: isStepActive ? "600" : "400",
-                                      fontSize: "0.95rem",
-                                    }}
-                                  >
-                                    {stepLabel}
-                                  </div>
-                                );
-                              })}
-                              <div style={{ position: "absolute", bottom: "1rem", right: "1rem" }}>
-                                <Boxes size={64} color="#ffffff" strokeWidth={1} />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
+                  </section>
                   </div>
-                </article>
-              </div>
-              <aside className={styles.topAside}>
-                <article className={styles.latestCard} style={{ height: "360px", display: "flex", flexDirection: "column" }}>
-                  <header>
-                    <span>Yaklaşan Rezervasyon</span>
-                  </header>
-                  <div className={styles.latestList} style={{ flex: 1, overflow: "hidden" }}>
-                    {[
-                      { 
-                        id: "REZ-1001", 
-                        customer: "Ahmet Yılmaz", 
-                        date: now.toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" }),
-                        time: `${String(now.getHours()).padStart(2, "0")}:00`,
-                        status: "Onaylandı", 
-                        guests: 4, 
-                        phone: "+90 555 123 45 67",
-                        table: "Masa 8",
-                        notes: "Pencere kenarı tercih ediyor",
-                        email: "ahmet.yilmaz@example.com"
-                      },
-                    ].map((reservation) => (
-                      <button
-                        key={reservation.id}
-                        type="button"
-                        className={styles.latestItem}
-                        onClick={() => setActiveReservation(reservation)}
-                      >
-                        <div className={styles.latestItemContent}>
-                          <div className={styles.latestInfo}>
-                            <div className={styles.latestBody}>
-                              <div className={styles.latestBodyHeader}>
-                                <span className={styles.latestIcon}>
-                                  <CalendarDays size={16} />
-                                </span>
-                                <div>
-                                  <strong>{reservation.id}</strong>
-                                  <p>{reservation.customer}</p>
-                                </div>
-                              </div>
-                              <div className={styles.latestBodyFooter}>
-                                <span className={styles.latestStatus}>{reservation.status}</span>
-                                <span className={styles.latestTotal}>{reservation.time}</span>
-                              </div>
-                            </div>
-                            <div className={styles.latestInfoDetails}>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Müşteri</span>
-                                <strong>{reservation.customer}</strong>
-                                <p>{reservation.phone}</p>
-                              </div>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Tarih</span>
-                                <strong>{reservation.date}</strong>
-                                <p>{reservation.guests} Kişi</p>
-                              </div>
-                              <div>
-                                <span className={styles.latestDetailLabel}>Durum</span>
-                                <strong>{reservation.status}</strong>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </article>
-              </aside>
-            </section>
-            <section className={styles.salesCard}>
-              <div className={styles.salesHeader}>
-                <div>
-                  <span className={styles.salesLabel}>24 Saatlik Satış</span>
-                  <strong className={styles.salesTotal}>{totalSales} TL</strong>
                 </div>
-                <a className={styles.salesLink} href="/dashboard/reports">
-                  Raporları görüntüle
-                </a>
-              </div>
-              <div className={styles.salesChart}>
-                {salesData.map((item, index) => {
-                  const isPeak = item.total === maxSales;
-                  return (
-                    <div
-                      key={item.hour}
-                      className={clsx(
-                        styles.salesBar,
-                        index >= salesData.length - 4 && styles.salesBarReverseTooltip,
-                      )}
-                    >
-                      <span className={styles.salesAmount}>
-                        {item.total.toLocaleString("tr-TR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}{" "}
-                        TL
-                      </span>
-                      <div
-                        className={clsx(
-                          styles.salesBarStack,
-                          isPeak && styles.salesBarStackPeak,
-                        )}
-                        style={{
-                          height: `${Math.round((item.total / maxSales) * 100)}%`,
-                        }}
-                      >
-                        {item.breakdown.map((segment) => {
-                          const channel = salesChannelMap[segment.id];
-                          if (!channel) return null;
-                          const segmentHeight =
-                            item.total > 0 ? (segment.amount / item.total) * 100 : 0;
-                          return (
-                            <div
-                              key={segment.id}
-                              className={styles.salesBarSegment}
-                              style={{
-                                height: `${segmentHeight}%`,
-                                backgroundColor: channel.color,
-                              }}
-                            />
-                          );
-                        })}
-                      </div>
-                      <span className={styles.salesHour}>{item.hour}</span>
-                      <div className={styles.salesDetails}>
-                        {item.breakdown.map((segment) => {
-                          const channel = salesChannelMap[segment.id];
-                          return (
-                            <div key={segment.id} className={styles.salesDetailRow}>
-                              <span
-                                className={styles.salesDetailDot}
-                                style={{ backgroundColor: channel.color }}
-                              />
-                              <div>
-                                <strong>{channel.label}</strong>
-                                <p>
-                                  {segment.amount.toLocaleString("tr-TR", {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                  })}{" "}
-                                  TL
-                                </p>
-                              </div>
+                <div style={{ padding: "30px", background: "rgba(17, 17, 17, 0.05)", borderRadius: "12px", marginBottom: "1.5rem", minWidth: 0, maxWidth: "100%", boxSizing: "border-box" }}>
+                  <div style={{ marginBottom: "1rem", fontSize: "1.1rem", fontWeight: "600", color: "var(--dash-text)" }}>Zaman Çizelgesi</div>
+                  <div style={{ overflowX: "auto", overflowY: "hidden", paddingBottom: "0.5rem", minWidth: 0, maxWidth: "100%" }} onScroll={(e) => { e.stopPropagation(); }}>
+                    <div style={{ display: "flex", gap: "1rem", minWidth: "max-content" }}>
+                      {[
+                        { name: "Ahmet", role: "Garson", action: "Masa 2 adisyon açtı", time: "14:30" },
+                        { name: "Mehmet", role: "Yönetici", action: "Ödeme aldı 500 TL", time: "14:25" },
+                        { name: "Ayşe", role: "Garson", action: "Masa 5 sipariş aldı", time: "14:20" },
+                        { name: "Fatma", role: "Kasiyer", action: "Nakit ödeme 250 TL", time: "14:15" },
+                        { name: "Ali", role: "Garson", action: "Masa 8 rezervasyon yaptı", time: "14:10" },
+                        { name: "Zeynep", role: "Yönetici", action: "Stok güncellemesi yaptı", time: "14:05" },
+                        { name: "Can", role: "Garson", action: "Masa 3 sipariş iptal etti", time: "14:00" },
+                        { name: "Elif", role: "Kasiyer", action: "Kredi kartı ödeme 180 TL", time: "13:55" },
+                        { name: "Burak", role: "Garson", action: "Masa 12 adisyon kapattı", time: "13:50" },
+                        { name: "Selin", role: "Yönetici", action: "Menü güncellemesi yaptı", time: "13:45" },
+                        { name: "Emre", role: "Garson", action: "Masa 7 sipariş aldı", time: "13:40" },
+                        { name: "Deniz", role: "Kasiyer", action: "Nakit ödeme 320 TL", time: "13:35" },
+                        { name: "Cem", role: "Garson", action: "Masa 1 rezervasyon yaptı", time: "13:30" },
+                        { name: "Aslı", role: "Yönetici", action: "Rapor oluşturdu", time: "13:25" },
+                        { name: "Kemal", role: "Garson", action: "Masa 9 adisyon açtı", time: "13:20" },
+                      ].map((item, index) => (
+                        <div key={index} style={{ minWidth: "280px", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", padding: "1rem", flexShrink: 0 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
+                            <div>
+                              <strong style={{ fontSize: "0.95rem", color: "var(--dash-text)" }}>{item.name}</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)", marginLeft: "0.5rem" }}>{item.role}</span>
                             </div>
-                          );
-                        })}
-                      </div>
+                            <span style={{ fontSize: "0.8rem", color: "var(--dash-text-muted)" }}>{item.time}</span>
+                          </div>
+                          <p style={{ fontSize: "0.9rem", color: "var(--dash-text)", margin: 0 }}>{item.action}</p>
+                        </div>
+                      ))}
                     </div>
-                  );
-                })}
-              </div>
-              <div className={styles.salesLegend}>
-                {salesChannels.map((channel) => (
-                  <div key={channel.id} className={styles.salesLegendItem}>
-                    <span
-                      className={styles.salesLegendDot}
-                      style={{ backgroundColor: channel.color }}
-                    />
-                    <span>{channel.label}</span>
                   </div>
-                ))}
-              </div>
-            </section>
+                </div>
           </main>
           </div>
         </section>
