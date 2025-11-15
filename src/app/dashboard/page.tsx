@@ -1200,7 +1200,7 @@ export default function DashboardPage() {
                 </article>
               </aside>
             </section>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem" }}>
                 <article className={styles.latestCard} ref={latestOrdersRef} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
                   <header>
                     <span>Son Sipariş</span>
@@ -1377,7 +1377,61 @@ export default function DashboardPage() {
                     </button>
                   </div>
                   <div style={{ overflow: "hidden", transition: "max-height 0.3s ease-out, opacity 0.3s ease-out", maxHeight: isStatsVisible ? "2000px" : "0", opacity: isStatsVisible ? 1 : 0 }}>
-                  <section className={styles.topMain} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
+                  <section className={styles.topMain} style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem" }}>
+                    <article className={styles.latestCard}>
+                      <header>
+                        <span>Günlük Özet</span>
+                      </header>
+                      <div style={{ padding: "1rem" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem", fontSize: "0.9rem" }}>Bugünkü Toplam Satış Tutarı</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>Satış</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.2rem" }}>12.450 TL</strong>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem", fontSize: "0.9rem" }}>Bugün Ağırlanan Misafir Sayısı</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>Misafir</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.2rem" }}>127</strong>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem", fontSize: "0.9rem" }}>Bugün Açık Sipariş Toplamı</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>Sipariş</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.2rem" }}>23</strong>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem", fontSize: "0.9rem" }}>Bugünkü Toplam Gider Tutarı</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>Gider</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.2rem" }}>3.250 TL</strong>
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem", background: "var(--dash-surface)", borderRadius: "12px", border: "1px solid var(--dash-border)" }}>
+                            <div>
+                              <strong style={{ display: "block", marginBottom: "0.25rem", fontSize: "0.9rem" }}>Masa Doluluk Oranı</strong>
+                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)" }}>Doluluk</span>
+                            </div>
+                            <div style={{ textAlign: "right" }}>
+                              <strong style={{ display: "block", fontSize: "1.2rem" }}>%68</strong>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
                     <article className={styles.latestCard}>
                       <header>
                         <span>Günün En Yoğun Saatleri</span>
@@ -1441,22 +1495,6 @@ export default function DashboardPage() {
                         ))}
                       </div>
                     </div>
-                    <div style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      background: "rgba(0, 0, 0, 0.7)",
-                      backdropFilter: "blur(8px)",
-                      padding: "1rem",
-                      borderRadius: "0 0 20px 20px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}>
-                      <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.9rem" }}>MASA YOĞUNLUĞU</span>
-                      <span style={{ color: "#ffffff", fontWeight: "700", fontSize: "1.1rem" }}>%20</span>
-                    </div>
                   </article>
                   <article className={styles.latestCard}>
                     <header>
@@ -1493,6 +1531,7 @@ export default function DashboardPage() {
                   <div style={{ overflowX: "auto", overflowY: "hidden", paddingBottom: "0.5rem", minWidth: 0, maxWidth: "100%" }} onScroll={(e) => { e.stopPropagation(); }}>
                     <div style={{ display: "flex", gap: "1rem", minWidth: "max-content" }}>
                       {[
+                        { name: "Masa 4", role: "Müşteri", action: "Garson çağırıyor hesap istiyor", time: "14:35" },
                         { name: "Ahmet", role: "Garson", action: "Masa 2 adisyon açtı", time: "14:30" },
                         { name: "Mehmet", role: "Yönetici", action: "Ödeme aldı 500 TL", time: "14:25" },
                         { name: "Ayşe", role: "Garson", action: "Masa 5 sipariş aldı", time: "14:20" },
@@ -1508,18 +1547,68 @@ export default function DashboardPage() {
                         { name: "Cem", role: "Garson", action: "Masa 1 rezervasyon yaptı", time: "13:30" },
                         { name: "Aslı", role: "Yönetici", action: "Rapor oluşturdu", time: "13:25" },
                         { name: "Kemal", role: "Garson", action: "Masa 9 adisyon açtı", time: "13:20" },
-                      ].map((item, index) => (
-                        <div key={index} style={{ minWidth: "280px", background: "var(--dash-surface)", border: "1px solid var(--dash-border)", borderRadius: "12px", padding: "1rem", flexShrink: 0 }}>
+                      ].map((item, index) => {
+                        const getRoleIcon = (role: string) => {
+                          if (role === "Garson") return "carbon:user";
+                          if (role === "Yönetici") return "carbon:user-star";
+                          if (role === "Kasiyer") return "carbon:receipt";
+                          if (role === "Müşteri") return "carbon:user-multiple";
+                          return "carbon:user";
+                        };
+                        const getActionIcon = (action: string) => {
+                          if (action.includes("ödeme") || action.includes("Ödeme")) return "carbon:money";
+                          if (action.includes("masa") || action.includes("Masa")) return "carbon:table";
+                          if (action.includes("rezervasyon")) return "carbon:calendar";
+                          if (action.includes("sipariş")) return "carbon:clipboard";
+                          if (action.includes("stok") || action.includes("Stok")) return "carbon:box";
+                          if (action.includes("menü") || action.includes("Menü")) return "carbon:book";
+                          if (action.includes("rapor") || action.includes("Rapor")) return "carbon:document";
+                          if (action.includes("hesap") || action.includes("Hesap")) return "carbon:receipt";
+                          if (action.includes("çağırıyor")) return "carbon:notification";
+                          return "carbon:information";
+                        };
+                        const isLatest = index === 0;
+                        return (
+                        <div key={index} style={{ 
+                          minWidth: "280px", 
+                          minHeight: "180px", 
+                          background: isLatest ? "rgba(239, 68, 68, 0.25)" : "var(--dash-surface)", 
+                          border: isLatest ? "2px solid rgba(239, 68, 68, 0.6)" : "1px solid var(--dash-border)", 
+                          borderRadius: "12px", 
+                          padding: "1rem", 
+                          flexShrink: 0,
+                          position: "relative",
+                          animation: isLatest ? "pulse 1.5s ease-in-out infinite" : "none"
+                        }}>
+                          <style>{`
+                            @keyframes pulse {
+                              0%, 100% { 
+                                background: rgba(239, 68, 68, 0.25);
+                                border-color: rgba(239, 68, 68, 0.6);
+                              }
+                              50% { 
+                                background: rgba(239, 68, 68, 0.4);
+                                border-color: rgba(239, 68, 68, 0.9);
+                              }
+                            }
+                          `}</style>
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
-                            <div>
-                              <strong style={{ fontSize: "0.95rem", color: "var(--dash-text)" }}>{item.name}</strong>
-                              <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)", marginLeft: "0.5rem" }}>{item.role}</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                              <Icon icon={getRoleIcon(item.role)} width={20} height={20} style={{ color: "var(--dash-text)" }} />
+                              <div>
+                                <strong style={{ fontSize: "0.95rem", color: "var(--dash-text)" }}>{item.name}</strong>
+                                <span style={{ fontSize: "0.85rem", color: "var(--dash-text-muted)", marginLeft: "0.5rem" }}>{item.role}</span>
+                              </div>
                             </div>
                             <span style={{ fontSize: "0.8rem", color: "var(--dash-text-muted)" }}>{item.time}</span>
                           </div>
                           <p style={{ fontSize: "0.9rem", color: "var(--dash-text)", margin: 0 }}>{item.action}</p>
+                          <div style={{ position: "absolute", bottom: "15px", right: "15px" }}>
+                            <Icon icon={getActionIcon(item.action)} width={64} height={64} style={{ color: "rgba(128, 128, 128, 0.3)", opacity: 0.5 }} />
+                          </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
