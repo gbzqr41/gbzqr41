@@ -17,6 +17,59 @@
   padding: 0;
 }
 
+.page input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+  filter: invert(0);
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+}
+
+.page input[type="date"]::-webkit-datetime-edit {
+  color: var(--dash-text);
+  padding: 0;
+}
+
+.page input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  color: var(--dash-text);
+  padding: 0;
+}
+
+.page input[type="date"]::-webkit-datetime-edit-text {
+  color: var(--dash-text-muted);
+  padding: 0 2px;
+}
+
+.page input[type="date"]::-webkit-datetime-edit-month-field,
+.page input[type="date"]::-webkit-datetime-edit-day-field,
+.page input[type="date"]::-webkit-datetime-edit-year-field {
+  color: var(--dash-text);
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+.page input[type="date"]::-webkit-datetime-edit-month-field:hover,
+.page input[type="date"]::-webkit-datetime-edit-day-field:hover,
+.page input[type="date"]::-webkit-datetime-edit-year-field:hover {
+  background: var(--dash-hover);
+}
+
+.page input[type="date"]::-webkit-datetime-edit-month-field:focus,
+.page input[type="date"]::-webkit-datetime-edit-day-field:focus,
+.page input[type="date"]::-webkit-datetime-edit-year-field:focus {
+  background: var(--dash-hover);
+  outline: none;
+}
+
+.page input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+.page input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
 .pageCollapsed {
   grid-template-columns: 96px 1fr;
 }

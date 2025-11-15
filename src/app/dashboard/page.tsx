@@ -34,6 +34,8 @@ import {
   Plus,
   Grid3x3,
   Check,
+  UserPlus,
+  LogOut,
 } from "lucide-react";
 import clsx from "clsx";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -380,6 +382,7 @@ export default function DashboardPage() {
   const searchWrapperRef = useRef<HTMLDivElement>(null);
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const profileButtonRef = useRef<HTMLButtonElement>(null);
   const [isSupportOpen, setSupportOpen] = useState(false);
   const supportRef = useRef<HTMLDivElement>(null);
   const [isAnnouncementOpen, setAnnouncementOpen] = useState(false);
@@ -452,7 +455,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isClickInsideMenu = profileMenuRef.current?.contains(target);
+      const isClickInsideButton = profileButtonRef.current?.contains(target);
+      
+      if (!isClickInsideMenu && !isClickInsideButton) {
         setProfileMenuOpen(false);
       }
       if (supportRef.current && !supportRef.current.contains(event.target as Node)) {
@@ -633,6 +640,392 @@ export default function DashboardPage() {
             </span>
             <span className={styles.addSectionLabel}>Add a section</span>
           </button>
+          <div style={{ marginTop: "auto", paddingTop: "1rem", paddingBottom: "20px", position: "relative" }}>
+            <div style={{ position: "relative", display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+              <Search size={16} strokeWidth={1.5} style={{ position: "absolute", left: "0.75rem", color: "rgba(255, 255, 255, 0.6)", pointerEvents: "none", zIndex: 1 }} />
+              <input
+                type="text"
+                placeholder="Ara..."
+                style={{
+                  padding: "0.75rem 5rem 0.75rem 2.5rem",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  color: "#ffffff",
+                  fontSize: "0.85rem",
+                  width: "100%",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                }}
+              />
+              <button
+                type="button"
+                style={{
+                  position: "absolute",
+                  right: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.25rem",
+                  padding: "0.4rem 0.6rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  color: "rgba(255, 255, 255, 0.8)",
+                  fontSize: "0.7rem",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  transition: "background 0.2s ease",
+                  zIndex: 2,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+                }}
+              >
+                <span>CTRL</span>
+                <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>+</span>
+                <span>F</span>
+              </button>
+            </div>
+            <div style={{ display: "flex", gap: "15px", marginBottom: "1rem" }}>
+              <button
+                type="button"
+                onClick={() => {}}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  padding: "0.75rem 1rem",
+                  background: "transparent",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  color: "#ffffff",
+                  fontSize: "0.85rem",
+                  fontWeight: "500",
+                  transition: "background 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <LifeBuoy size={16} strokeWidth={1.5} />
+                <span>Yardım</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {}}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  padding: "0.75rem 1rem",
+                  background: "transparent",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  color: "#ffffff",
+                  fontSize: "0.85rem",
+                  fontWeight: "500",
+                  transition: "background 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <Phone size={16} strokeWidth={1.5} />
+                <span>Destek</span>
+              </button>
+            </div>
+            <button
+              ref={profileButtonRef}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setProfileMenuOpen(!isProfileMenuOpen);
+              }}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: "0.75rem", background: "transparent", border: "none", cursor: "pointer", padding: "0.5rem", borderRadius: "12px", transition: "background 0.2s ease", pointerEvents: "auto" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontWeight: "600", fontSize: "0.9rem", flexShrink: 0, pointerEvents: "none" }}>
+                EA
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", flex: 1, minWidth: 0, textAlign: "left", pointerEvents: "none" }}>
+                <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.85rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", pointerEvents: "none" }}>Ezgi AKÇABAT</span>
+                <span style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "0.75rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", pointerEvents: "none" }}>Yönetici</span>
+              </div>
+            </button>
+            {isProfileMenuOpen && (
+              <div
+                ref={profileMenuRef}
+                style={{
+                  position: "fixed",
+                  bottom: "30px",
+                  left: "300px",
+                  width: "240px",
+                  background: "var(--dash-surface)",
+                  borderRadius: "16px",
+                  boxShadow: "0 20px 48px rgba(17, 17, 17, 0.25)",
+                  border: "1px solid var(--dash-border)",
+                  padding: "0.5rem",
+                  zIndex: 1000,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.25rem",
+                  overflow: "hidden",
+                }}
+              >
+                <div style={{ width: "calc(100% + 1rem)", height: "80px", background: "#000000", margin: "-0.5rem -0.5rem 0 -0.5rem", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                  <div style={{ width: "60px", height: "60px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontWeight: "600", fontSize: "1.2rem" }}>
+                    EA
+                  </div>
+                </div>
+                <div style={{ width: "100%", height: "1px", background: "var(--dash-border)", margin: "0.5rem 0" }} />
+                <div style={{ display: "flex", gap: "15px", padding: "0.5rem 0" }}>
+                  <button
+                    type="button"
+                    onClick={() => setProfileMenuOpen(false)}
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.5rem",
+                      padding: "0.75rem 1rem",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      color: "var(--dash-text)",
+                      fontSize: "0.9rem",
+                      fontWeight: "500",
+                      transition: "background 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--dash-hover)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                    }}
+                  >
+                    <LifeBuoy size={18} strokeWidth={1.5} />
+                    <span>Yardım</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProfileMenuOpen(false)}
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "0.5rem",
+                      padding: "0.75rem 1rem",
+                      background: "transparent",
+                      border: "none",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      color: "var(--dash-text)",
+                      fontSize: "0.9rem",
+                      fontWeight: "500",
+                      transition: "background 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--dash-hover)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                    }}
+                  >
+                    <Phone size={18} strokeWidth={1.5} />
+                    <span>Destek</span>
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen(false)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    color: "var(--dash-text)",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <User size={18} strokeWidth={1.5} />
+                  <span>Profil</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen(false)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    color: "var(--dash-text)",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <Settings size={18} strokeWidth={1.5} />
+                  <span>Ayarlar</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen(false)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    color: "var(--dash-text)",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <LifeBuoy size={18} strokeWidth={1.5} />
+                  <span>Yardım</span>
+                </button>
+                <div
+                  style={{
+                    height: "1px",
+                    background: "var(--dash-border)",
+                    margin: "0.5rem 0",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTheme(theme === "light" ? "dark" : "light");
+                    setProfileMenuOpen(false);
+                  }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    color: "var(--dash-text)",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  {theme === "light" ? <Moon size={18} strokeWidth={1.5} /> : <Sun size={18} strokeWidth={1.5} />}
+                  <span>{theme === "light" ? "Gece Modu" : "Gündüz Modu"}</span>
+                </button>
+                <div
+                  style={{
+                    height: "1px",
+                    background: "var(--dash-border)",
+                    margin: "0.5rem 0",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen(false)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: "12px",
+                    cursor: "pointer",
+                    color: "#ff4757",
+                    fontSize: "0.9rem",
+                    fontWeight: "500",
+                    transition: "background 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <LogOut size={18} strokeWidth={1.5} />
+                  <span>Çıkış Yap</span>
+                </button>
+              </div>
+            )}
+          </div>
         </aside>
         <section className={styles.content}>
           <div className={styles.contentInner}>
@@ -644,9 +1037,139 @@ export default function DashboardPage() {
                 </div>
                 <div className={styles.pageTitle}>Gösterge Tablosu</div>
               </div>
-              <button type="button" className={styles.searchIconButton}>
-                <Search size={18} />
-              </button>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <div style={{ position: "relative", display: "flex", alignItems: "center", flexShrink: 0 }}>
+                  <Search size={18} strokeWidth={1.5} style={{ position: "absolute", left: "0.75rem", color: "var(--dash-text-muted)", pointerEvents: "none", zIndex: 1 }} />
+                  <input
+                    type="text"
+                    placeholder="Ara..."
+                    style={{
+                      padding: "0.75rem 0.75rem 0.75rem 2.5rem",
+                      borderRadius: "12px",
+                      border: "1px solid var(--dash-border)",
+                      background: "var(--dash-surface)",
+                      color: "var(--dash-text)",
+                      fontSize: "0.9rem",
+                      width: "280px",
+                      minWidth: "200px",
+                      outline: "none",
+                      boxSizing: "border-box",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = "var(--dash-text)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = "var(--dash-border)";
+                    }}
+                  />
+                </div>
+                <button
+                  type="button"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.75rem 1rem",
+                    borderRadius: "12px",
+                    border: "1px solid var(--dash-border)",
+                    background: "var(--dash-surface)",
+                    color: "var(--dash-text)",
+                    fontSize: "0.85rem",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    transition: "background 0.2s ease",
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "var(--dash-surface)";
+                  }}
+                >
+                  <span>CTRL</span>
+                  <span style={{ color: "var(--dash-text-muted)" }}>+</span>
+                  <span>F</span>
+                </button>
+                <input
+                  type="date"
+                  style={{
+                    height: "40px",
+                    padding: "0 1rem",
+                    borderRadius: "50px",
+                    border: "1px solid var(--dash-border)",
+                    background: "var(--dash-bg)",
+                    fontSize: "0.85rem",
+                    color: "var(--dash-text)",
+                    cursor: "pointer",
+                    minWidth: "140px",
+                    transition: "all 0.22s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                    e.currentTarget.style.borderColor = "rgba(17, 17, 17, 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "var(--dash-bg)";
+                    e.currentTarget.style.borderColor = "var(--dash-border)";
+                  }}
+                />
+                <button
+                  type="button"
+                  style={{
+                    height: "40px",
+                    padding: "0 1.25rem",
+                    borderRadius: "50px",
+                    border: "1px solid var(--dash-border)",
+                    background: "var(--dash-bg)",
+                    fontSize: "0.85rem",
+                    fontWeight: "600",
+                    color: "var(--dash-text)",
+                    cursor: "pointer",
+                    transition: "all 0.22s ease",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--dash-hover)";
+                    e.currentTarget.style.borderColor = "rgba(17, 17, 17, 0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "var(--dash-bg)";
+                    e.currentTarget.style.borderColor = "var(--dash-border)";
+                  }}
+                >
+                  <UserPlus size={16} />
+                  Davet Et
+                </button>
+                <button type="button" className={styles.searchIconButton} style={{ position: "relative" }}>
+                  <Bell size={18} />
+                  <span style={{
+                    position: "absolute",
+                    top: "4px",
+                    right: "4px",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#ff4757",
+                    border: "2px solid var(--dash-bg)",
+                  }} />
+                </button>
+                <button type="button" className={styles.searchIconButton} style={{ position: "relative" }}>
+                  <MessageCircle size={18} />
+                  <span style={{
+                    position: "absolute",
+                    top: "4px",
+                    right: "4px",
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: "#ff4757",
+                    border: "2px solid var(--dash-bg)",
+                  }} />
+                </button>
+              </div>
             </div>
             <main className={styles.main}>
             <section className={styles.topRow}>
@@ -740,26 +1263,34 @@ export default function DashboardPage() {
                         <p style={{ fontSize: "2rem", fontWeight: "bold", marginTop: "0.5rem" }}>127</p>
                       </div>
                       <div style={{ display: "flex", alignItems: "flex-end", gap: "0.5rem", height: "200px", marginTop: "1rem" }}>
-                        {[
-                          { hour: "12:00", value: 35, height: "80%" },
-                          { hour: "13:00", value: 45, height: "100%" },
-                          { hour: "14:00", value: 30, height: "67%" },
-                          { hour: "19:00", value: 42, height: "93%" },
-                          { hour: "20:00", value: 38, height: "84%" },
-                        ].map((item, index) => (
-                          <div key={index} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem" }}>
-                            <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
-                              <div style={{ width: "100%", background: "linear-gradient(180deg, #111111 0%, #3d3d3d 100%)", borderRadius: "8px 8px 0 0", height: item.height, minHeight: "40px", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: "0.5rem" }}>
-                                <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.85rem" }}>{item.value}</span>
+                        {(() => {
+                          const data = [
+                            { hour: "12:00", value: 35 },
+                            { hour: "13:00", value: 45 },
+                            { hour: "14:00", value: 30 },
+                            { hour: "19:00", value: 42 },
+                            { hour: "20:00", value: 38 },
+                          ];
+                          const maxValue = Math.max(...data.map(d => d.value));
+                          const maxHeight = 160;
+                          return data.map((item, index) => {
+                            const barHeight = (item.value / maxValue) * maxHeight;
+                            return (
+                              <div key={index} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", height: "100%" }}>
+                                <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem", height: "100%", justifyContent: "flex-end" }}>
+                                  <div style={{ width: "100%", background: "linear-gradient(180deg, #111111 0%, #3d3d3d 100%)", borderRadius: "8px 8px 0 0", height: `${barHeight}px`, minHeight: "40px", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: "0.5rem" }}>
+                                    <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.85rem" }}>{item.value}</span>
+                                  </div>
+                                  <span style={{ fontSize: "0.75rem", color: "var(--dash-text-muted)" }}>{item.hour}</span>
+                                </div>
                               </div>
-                              <span style={{ fontSize: "0.75rem", color: "var(--dash-text-muted)" }}>{item.hour}</span>
-                            </div>
-                          </div>
-                        ))}
+                            );
+                          });
+                        })()}
                       </div>
                     </div>
                   </article>
-                  <article className={styles.latestCard}>
+                  <article className={styles.latestCard} style={{ position: "relative" }}>
                     <header>
                       <span>En Yoğun Masalar</span>
                     </header>
@@ -784,6 +1315,22 @@ export default function DashboardPage() {
                           </div>
                         ))}
                       </div>
+                    </div>
+                    <div style={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      background: "rgba(0, 0, 0, 0.7)",
+                      backdropFilter: "blur(8px)",
+                      padding: "1rem",
+                      borderRadius: "0 0 20px 20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}>
+                      <span style={{ color: "#ffffff", fontWeight: "600", fontSize: "0.9rem" }}>MASA YOĞUNLUĞU</span>
+                      <span style={{ color: "#ffffff", fontWeight: "700", fontSize: "1.1rem" }}>%20</span>
                     </div>
                   </article>
                   <article className={styles.latestCard}>
@@ -813,87 +1360,12 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </article>
-                  <article className={styles.latestCard}>
-                    <header>
-                      <span>Masa Durumu</span>
-                    </header>
-                    <div style={{ padding: "1rem", position: "relative", display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "150px",
-                          height: "150px",
-                          cursor: "pointer",
-                        }}
-                        onMouseEnter={() => setHoveredTablePercentage(10)}
-                        onMouseLeave={() => setHoveredTablePercentage(null)}
-                      >
-                        <svg width="150" height="150" style={{ transform: "rotate(-90deg)" }}>
-                          <circle
-                            cx="75"
-                            cy="75"
-                            r="65"
-                            fill="none"
-                            stroke="#e0e0e0"
-                            strokeWidth="10"
-                          />
-                          <circle
-                            cx="75"
-                            cy="75"
-                            r="65"
-                            fill="none"
-                            stroke="#ff6b35"
-                            strokeWidth="10"
-                            strokeDasharray={2 * Math.PI * 65}
-                            strokeDashoffset={2 * Math.PI * 65 - (10 / 100) * 2 * Math.PI * 65}
-                            style={{ transition: "all 0.3s ease" }}
-                          />
-                        </svg>
-                        <div style={{
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          transform: "translate(-50%, -50%)",
-                          textAlign: "center",
-                        }}>
-                          <strong style={{ fontSize: "1.8rem", fontWeight: "700" }}>10%</strong>
-                        </div>
-                        {hoveredTablePercentage === 10 && (
-                          <div style={{
-                            position: "absolute",
-                            top: "110%",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            background: "var(--dash-surface)",
-                            border: "1px solid var(--dash-border)",
-                            borderRadius: "12px",
-                            padding: "0.75rem",
-                            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
-                            zIndex: 10,
-                            minWidth: "120px",
-                            whiteSpace: "nowrap",
-                          }}>
-                            <div style={{ fontSize: "0.85rem", fontWeight: "600", marginBottom: "0.5rem", color: "var(--dash-text-muted)" }}>
-                              Masalar
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                              {["Masa 3", "Masa 7"].map((table, tableIndex) => (
-                                <span key={tableIndex} style={{ fontSize: "0.8rem", color: "var(--dash-text)" }}>
-                                  {table}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </article>
                 </section>
-                <article className={styles.latestCard} ref={latestOrdersRef}>
+                <article className={styles.latestCard} ref={latestOrdersRef} style={{ height: "100%", display: "flex", flexDirection: "column" }}>
                   <header>
                     <span>Son Sipariş</span>
                   </header>
-                  <div className={styles.latestList}>
+                  <div className={styles.latestList} style={{ flex: 1, overflow: "auto" }}>
                     {latestOrders.slice(0, 1).map((order) => (
                       <button
                         key={order.code}
@@ -957,25 +1429,33 @@ export default function DashboardPage() {
                               )}
                             </div>
                           </div>
-                          <div className={styles.latestStepsColumn}>
-                            <div className={styles.latestStepTrack} style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ffa500 50%, #ff4757 100%)", borderRadius: "12px", padding: "1rem" }}>
-                              {order.steps.filter(step => step.label === "Sipariş Alındı" || step.label === "Hazırlanıyor").map((step, stepIndex) => {
-                                const originalIndex = order.steps.findIndex(s => s.label === step.label);
-                                const isStepActive = originalIndex <= order.progress;
+                          <div className={styles.latestStepsColumn} style={{ height: "100%" }}>
+                            <div className={styles.latestStepTrack} style={{ background: "linear-gradient(135deg, #ff6b35 0%, #ffa500 50%, #ff4757 100%)", borderRadius: "12px", padding: "1rem", height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", gap: "0.5rem", position: "relative" }}>
+                              {[
+                                "Sipariş Alındı",
+                                "Hazırlanıyor",
+                                "Paketleniyor",
+                                "Kurye Yolda",
+                                "Teslim Edildi",
+                                "İptal Edildi"
+                              ].map((stepLabel, stepIndex) => {
+                                const isStepActive = stepIndex <= order.progress;
                                 return (
                                   <div
-                                    key={step.label}
+                                    key={stepLabel}
                                     style={{
                                       color: isStepActive ? "#000000" : "#808080",
                                       fontWeight: isStepActive ? "600" : "400",
                                       fontSize: "0.95rem",
-                                      marginBottom: stepIndex < 1 ? "0.5rem" : "0",
                                     }}
                                   >
-                                    {step.label}
+                                    {stepLabel}
                                   </div>
                                 );
                               })}
+                              <div style={{ position: "absolute", bottom: "1rem", right: "1rem" }}>
+                                <Boxes size={64} color="#ffffff" strokeWidth={1} />
+                              </div>
                             </div>
                           </div>
                         </div>
